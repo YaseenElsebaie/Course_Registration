@@ -233,10 +233,9 @@ def student_register():
 	cursor =conn.cursor()
 	
 	try:
-
-		# #Query to Register a student and create profile with form values
-		
+		# #Query to Register a student and create profile with form values	
 		insert(register_student, (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken))
+		
 		return redirect('/')
 
 	except Exception as e:		#if error when inserting student to database
@@ -321,7 +320,6 @@ def Rating():
 
 	if ('Confirm' in request.form):		#Check is student chooses to update the rating
 
-		cursor =conn.cursor()
 		
 		#Get Values from the form
 		Rating = request.form['Rating']
@@ -335,11 +333,8 @@ def Rating():
 		Course_ID = Confirm['Course_ID']
 
 		#Executes query for inserting rating
-		insert_rating="UPDATE Takes SET Rating = %s WHERE (Student_ID = %s) and (Section_ID = %s) and (Course_ID = %s)"
-		cursor.execute(insert_rating,(Rating, Student, Section_ID, Course_ID))
-		conn.commit()
+		insert(update_rating, (Rating, Student, Section_ID, Course_ID) )
 			
-		cursor.close()
 		
 	return redirect('/StudentHome')
 
@@ -380,17 +375,10 @@ def AdminInsertCourse():
 	try:
 
 		#execute query to add the course
-		cursor = conn.cursor()
-		query = "INSERT INTO Course (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name ) VALUES (%s, %s,%s, %s, %s)"
-		cursor.execute(query,(Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name))
-		conn.commit()
+		insert(create_course, (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name))
 
 		#execute query to add the section
-		cursor = conn.cursor()
-		query2 = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-		cursor.execute(query2,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit))
-		conn.commit()
-		cursor.close()
+		insert(create_section,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit) )
 
 		return redirect(url_for('AdminCreateCourse'))
 	
@@ -424,25 +412,20 @@ def AdminInsertSection():
 	Student_Limit = request.form['Student_Limit']
 
 	#execute query to check the course
-	cursor = conn.cursor()
-	query = "Select * FROM Course Where Course_ID = %s"
-	cursor.execute(query,(Course_ID))
-	course = cursor.fetchall()
+	
+	course = fetch_all(check_course, Course_ID)
 
 
 	if (course):
 
 		#execute query to add the section
-		cursor = conn.cursor()
-		query2 = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-		cursor.execute(query2,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit))
-		conn.commit()
+		insert(create_section,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit) )
+
 	else:
 		#returns an error message to the html page
 		error = 'Invalid Course ID'
 		return render_template('AdminCreateSection.html', error=error)
 
-	cursor.close()
 
 	return redirect(url_for('AdminCreateSection'))
 
@@ -466,31 +449,27 @@ def InsertTeaches():
 	Instructor_ID = request.form['Instructor_ID']
 
 	#execute query to fetch all details of the course
-	cursor = conn.cursor()
-	query = "Select * FROM Course Where Course_ID = %s"
-	cursor.execute(query,(Course_ID))
-	course = cursor.fetchall()
+	# cursor = conn.cursor()
+	# query = "Select * FROM Course Where Course_ID = %s"
+	# cursor.execute(query,(Course_ID))
+	# course = cursor.fetchall()
+	course = fetch_all(check_course, Course_ID)
+
 
 	#execute query to fetch all details of the section
-	cursor = conn.cursor()
-	query = "Select * FROM Section Where Section_ID = %s and Course_ID = %s"
-	cursor.execute(query,(Section_ID, Course_ID))
-	section = cursor.fetchall()
+	section = fetch_all(check_section, (Section_ID, Course_ID))
 	
 
 	if (course and section): #Check if course and section exist
 
 		#execute query to assign the instructor to teach
-		cursor = conn.cursor()
-		query2 = "INSERT INTO Teaches (Section_ID, Course_ID, Instructor_ID) VALUES (%s, %s,%s)"
-		cursor.execute(query2,(Section_ID, Course_ID, Instructor_ID))
-		conn.commit()
+		insert(assign_inst, (Course_ID, Instructor_ID, Section_ID ))
 
 	else: #if course or section dont exist
 		error = 'Invalid Section'
 		return render_template('AssignInstructor.html', error=error)
 
-	cursor.close()
+	# cursor.close()
 	return redirect(url_for('AssignInstructor'))
 
 
@@ -521,19 +500,11 @@ def InstructorInsertCourse():
 	Student_Limit = request.form['Student_Limit']
 
 	try:
-
 		#execute query to add the course
-		cursor = conn.cursor()
-		query = "INSERT INTO Course (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name ) VALUES (%s, %s,%s, %s, %s)"
-		cursor.execute(query,(Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name))
-		conn.commit()
+		insert(create_course, (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name))
 
 		#execute query to add the section
-		cursor = conn.cursor()
-		query2 = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-		cursor.execute(query2,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit))
-		conn.commit()
-		cursor.close()
+		insert(create_section,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit) )
 
 		return redirect(url_for('InstructorCreateCourse'))
 	
@@ -567,26 +538,18 @@ def InstructorInsertSection():
 	Student_Limit = request.form['Student_Limit']
 
 	#execute query to check if course exists
-	cursor = conn.cursor()
-	query = "Select * FROM Course Where Course_ID = %s"
-	cursor.execute(query,(Course_ID))
-	course = cursor.fetchall()
+	course = fetch_all(check_course, Course_ID)
 
 
 	if (course):	#if the course exists then create section
-
 		#execute query to add the section
-		cursor = conn.cursor()
-		query2 = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-		cursor.execute(query2,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit))
-		conn.commit()
+		insert(create_section,(Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit) )
+
 
 	else:		# if course doesnt exist, return error message
-
 		error = 'Invalid Course ID'
 		return render_template('InstructorCreateSection.html', error=error)
 
-	cursor.close()
 
 	return redirect(url_for('InstructorCreateSection'))
 
@@ -614,11 +577,7 @@ def InsertInstructor():
 	try:
 
 		#execute query to add the instructor account
-		cursor = conn.cursor()
-		query = "INSERT INTO Instructor (Instructor_ID, Instructor_Password, Instructor_Fname, Instructor_Lname, Instructor_Email, Department_Name) VALUES (%s, %s, %s, %s, %s, %s)"
-		cursor.execute(query,(Instructor_ID, Instructor_Password, Instructor_Fname, Instructor_Lname, Instructor_Email, Department_Name))
-		conn.commit()
-		cursor.close()
+		insert(create_inst, (Instructor_ID, Instructor_Password, Instructor_Fname, Instructor_Lname, Instructor_Email, Department_Name))
 
 		return redirect(url_for('CreateInstructor'))
 	
@@ -650,12 +609,7 @@ def InsertDepartment():
 	try:
 
 		#execute query to add the department
-		cursor = conn.cursor()
-		query = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES (%s, %s, %s)"
-		cursor.execute(query,(Department_Name, Department_Address, Department_Email))
-		conn.commit()
-		cursor.close()
-
+		insert(create_dept, (Department_Name, Department_Address, Department_Email))
 		return redirect(url_for('CreateDepartment'))
 	
 	except Exception as e:		#if creating department fails return error
@@ -683,13 +637,8 @@ def InsertAdmin():
 	Admin_Password= request.form['Admin_Password']
 
 	try:
-
 		#execute query to add the admin account
-		cursor = conn.cursor()
-		query = "INSERT INTO Administrator (Admin_ID, Admin_Password) VALUES (%s, %s)"
-		cursor.execute(query,(Admin_ID, Admin_Password))
-		conn.commit()
-		cursor.close()
+		insert(create_admin, (Admin_ID, Admin_Password))
 
 		return redirect(url_for('CreateAdmin'))
 	
@@ -1017,3 +966,4 @@ app.secret_key = 'some key that you will never guess'
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
+
