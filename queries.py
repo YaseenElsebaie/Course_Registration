@@ -1,11 +1,11 @@
 
 student_login = "SELECT Student_ID, Student_Password FROM Student WHERE Student_ID = %s and Student_Password = %s"
+student_info = "Select * from Student where Student_ID=%s"
 
+inst_login = "SELECT Instructor_ID, Instructor_Password FROM Instructor WHERE Instructor_ID = %s and Instructor_Password = %s"
+inst_info = "Select * from Instructor where Instructor_ID=%s"
 
-instructor_login = "SELECT Instructor_ID, Instructor_Password FROM Instructor WHERE Instructor_ID = %s and Instructor_Password = %s"
-
-
-admin_login = "SELECT Admin_ID, Admin_Password FROM Instructor WHERE Admin_ID = %s and Admin_Password = %s"
+admin_login = "SELECT Admin_ID, Admin_Password FROM Administrator WHERE Admin_ID = %s and Admin_Password = %s"
 
 
 register_student = "INSERT INTO Student (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken) VALUES (%s, %s,%s, %s, %s, %s)"
@@ -70,7 +70,7 @@ update_credits = "Update Student SET Credits_Taken = Credits_Taken + %s"
 
 
 #	(Fetch Instructor information) 
-fetch_student = "Select * from Instructor where Instructor_ID=%s"
+fetch_inst = "Select * from Instructor where Instructor_ID=%s"
 
 
 #	(Fetch instructor courses) 
