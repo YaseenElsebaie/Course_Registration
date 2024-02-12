@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: #663399;">Courses Information and Student View</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #663399; 
+            background-color: #dddcdc;
+        }
+
+        h1 {
+            color: #663399;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px 0px #888888;
+        }
+
+        th {
+            background-color: #d5d3d3;
+            color: #313131;
+            border: 1px solid #a9a9a9;
+            padding: 15px;
+            font-size: 1.2em;
+        }
+
+        td {
+            border: 1px solid #a9a9a9;
+            color: #313131;
+            padding: 10px;
+        }
+
+        caption {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #3a3a3a;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label, select, button {
+            margin: 5px;
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        
+        input[type="submit"] {
+            margin:5px;
+            background-color: #ffffff;
+            color: #663399;
+            size: 20px;
+            border: 2px solid #663399;
+            border-radius: 15px;
+            border-bottom: 10px solid #663399;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover{
+            background-color: #663399;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+
+        body:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 6%; 
+            height: 100%;
+            background-color: #663399;
+        }
+
+        body:after {
+            right: 0;
+            clip-path:polygon(100% 0%, 0% 50%, 100% 100%);
+        }
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Courses Information</h1>
+
+    <form action="/CourseStudents" method="POST">
+        <table>
+            <caption>Courses Table</caption>
+            <th>Course ID</th>
+            <th>Section ID</th>
+            <th>View Students</th>
+
+            {% for line in teaches %}
+            <tr>
+                <td>{{line['Course_ID']}}</td>
+                <td>{{line['Section_ID']}}</td>
+
+                <td>
+                    <label>
+                        Select Course
+                        <input type="radio" name="View_Students" value="{{line}}">
+                    </label>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br><br />
+        <input type="submit" value="View Students">
+    </form>
+    <br></br>
+    <a href="/InstructorHome">Go Back</a>
+    <a href="/InstructorLogout">Logout</a>
+
+</body>
+
+</html>

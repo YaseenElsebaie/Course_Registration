@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Instructor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #663399;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            margin:3px;
+            background-color: #ffffff;
+            color: #663399;
+            
+            border: 2px solid #663399;
+            border-radius: 15px;
+            border-bottom: 10px solid #663399;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover{
+            background-color: #663399;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+        .decorative-shape {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 130%;
+            width: 13%;
+            background-color: #663399;
+            clip-path: polygon(100% 0, 0% 50%, 100% 100%);
+        }
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="decorative-shape"></div>
+
+    <h1>To assign an instructor to an existing section of a course</h1>
+
+    <div>
+        <form action='/InsertTeaches' method="POST">
+
+            <label for="Course_ID">Course ID:</label>
+            <input type="text" name="Course_ID" required>
+
+            <label for="Section_ID">Section ID:</label>
+            <input type="text" name="Section_ID" required>
+
+            <label for="Instructor_ID">Instructor ID:</label>
+            <input type="text" name="Instructor_ID" required>
+
+
+            <input type="submit" value="Assign">
+
+            {% if error %}
+            <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+        </form>
+    </div>
+
+
+
+    <a href="/AdminHome">Go Back</a>
+    <a href="/AdminLogout">Logout</a>
+
+</body>
+
+</html>

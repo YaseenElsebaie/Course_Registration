@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #6c37a1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            width: 300px;
+        }
+
+        h2 {
+            color: #663399;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-top: 10px;
+            color: #333;
+        }
+
+        input {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd; 
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #e6e6e6; 
+            color: #663399; 
+            cursor: pointer;
+            border: 1px solid #663399; 
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #ffffff;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #000000;
+            border-radius: 10px;
+        }
+
+        a:hover {
+            background-color: #716a79;
+            color: #ffffff;
+        }
+
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-design"></div>
+
+    <div class="container">
+        <h2>Student Login</h2>
+        <form action="/StudentloginAuth" method="POST">
+            <label for="Student_ID">Student ID</label>
+            <input type="text" name="Student_ID" placeholder="Student ID" required />
+
+            <label for="Student_Password">Password</label>
+            <input type="password" name="Student_Password" placeholder="Password" required />
+
+            <input type="submit" value="Login" />
+            {% if error %}
+            <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Instructor Login</h2>
+        <form action="/InstructorloginAuth" method="POST">
+            <label for="Instructor_ID">Instructor ID</label>
+            <input type="text" name="Instructor_ID" placeholder="Instructor ID" required />
+
+            <label for="Instructor_Password">Password</label>
+            <input type="password" name="Instructor_Password" placeholder="Password" required />
+
+            <input type="submit" value="Login" />
+            {% if error %}
+            <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Administrator Login</h2>
+        <form action="/AdminloginAuth" method="POST">
+            <label for="Admin_ID">Admin ID</label>
+            <input type="text" name="Admin_ID" placeholder="Admin ID" required />
+
+            <label for="Admin_Password">Password</label>
+            <input type="password" name="Admin_Password" placeholder="Password" required />
+
+            <input type="submit" value="Login" />
+            {% if error %}
+            <p class="error"><strong>Error:</strong> {{error}}</p>
+            {% endif %}
+        </form>
+    </div>
+
+    <a href="/">Go back</a>
+
+</body>
+
+</html>

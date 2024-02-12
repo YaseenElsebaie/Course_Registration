@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #572a83, #803fc1);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #ffffff;
+            font-size: 1.2em;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            border-bottom: 10px solid #ffffff;
+        }
+
+        a:hover {
+            background-color: #ffffff;
+            color: #663399;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="decorative-shape-left"></div>
+    <div class="decorative-shape-right"></div>
+    <h1>Welcome {{Admin_ID}}</h1>
+
+    <a href="/CreateDepartment">Create New Department</a>
+    <a href="/CreateInstructor">Create Instructor Account</a>
+    <a href="/CreateAdmin">Create Administrator Account</a>
+    <a href="/AdminCreateCourse">Create New Course</a>
+    <a href="/AdminCreateSection">Create New Section</a>
+    <a href="/AssignInstructor">Assign Instructor to a Section</a>
+    <a href="/ProposeChoice">Propose Section Choices to Instructor</a>
+    
+    <a href="/AdminLogout">Logout</a>
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #b8b7b7, #dddcdc);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #663399;
+            margin-bottom: 20px;
+            font-size: 2em;
+            align-self: flex-start;
+            margin-left: 30px;
+        }
+
+        h2 {
+            color: #663399;
+            font-size: 1.5em;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #fff;
+            font-size: 1.2em;
+            background-color: #663399;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        a:hover {
+            background-color: #4a2871;
+            color: white;
+        }
+
+        .instructor-info {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+            max-width: 600px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .instructor-info h2 {
+            color: #663399;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .info-value {
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .logout-button {
+            background-color: #fff;
+            color: #663399;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #663399;
+            color: #fff;
+        }
+
+        .side-design {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 80px;
+            background: linear-gradient(to right, #f2f2f2, #fff);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="side-design"></div>
+
+    <h1>Welcome Professor</h1>
+
+    <div class="instructor-info">
+        <h2>Instructor Information</h2>
+        <div class="info-row">
+            <span class="info-label">First Name:</span>
+            <span class="info-value">{{ instructor['Instructor_Fname'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Last Name:</span>
+            <span class="info-value">{{ instructor['Instructor_Lname'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Department:</span>
+            <span class="info-value">{{ instructor['Department_Name'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Credits Taken:</span>
+            <span class="info-value">{{ instructor['Instructor_Email'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Student ID:</span>
+            <span class="info-value">{{ instructor['Instructor_ID'] }}</span>
+        </div>
+
+        <div class="button-container">
+            <a href="/ViewInstructorCourses">View Courses</a>
+            <a href="/ViewChoice">View Proposed Sections</a>
+            <a href="/InstructorCreateCourse">Create Course</a>
+            <a href="/InstructorCreateSection">Create Section</a>
+        </div>
+    </div>
+    <br>
+    <a href="/InstructorLogout" class="logout-button">Logout</a>
+
+</body>
+
+</html>

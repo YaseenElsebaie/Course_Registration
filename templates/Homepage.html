@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            background-color: #c1a2e1;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+        }
+    
+        .side-design {
+            width: 20%;
+            background-color: #663399;
+            height: 100vh;
+        }
+    
+        div {
+            width: 70%;
+            margin-bottom: 20px; 
+            margin-right: 10px;
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    
+        h1, h2 {
+            color: #663399;
+            padding: 20px;
+        }
+    
+        form {
+            margin-top: 20px; 
+        }
+    
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #663399;
+        }
+    
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    
+        input[type="submit"] {
+            background-color: #663399;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #b5b5b5;
+            color: #000000;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+    
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<title>Tandon Homepage</title>
+
+<body>
+    <div class="side-design"></div>
+
+    <div>
+        <h1>Tandon Homepage</h1>
+    </div>
+
+    <div>
+        <h2>Course Search by Name</h2>
+        <form action="/CourseSearchName" method="POST">
+            <label for="Course_Name">Course Name:</label>
+            <input type="text" name="Course_Name" id="Course_Name"><br><br>
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    <div>
+        <h2>Course Search by Instructor</h2>
+        <form action="/CourseSearchInstructor" method="POST">
+            <label for="Instructor_Name">Instructor Name:</label>
+            <input type="text" name="Instructor_Name" id="Instructor_Name"><br><br>
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    <div>
+        <h2>Course Search by Department</h2>
+        <form action="/CourseSearchDepartment" method="POST">
+            <label for="Department_Name">Department Name:</label>
+            <input type="text" name="Department_Name" id="Department_Name"><br><br>
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    <div>
+        <a href="/Register">Register</a><br></br>
+        <a href="/Login">Login</a>
+        <br><br>
+        <a href="/Calendar">View Academic Calendar</a><br></br>
+    </div>
+
+    <div class="side-design"></div>
+</body>
+
+</html>

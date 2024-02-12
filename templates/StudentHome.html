@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #4E2A7E, #6628A5);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        h2 {
+            color: #663399;
+        }
+
+        h3 {
+            color: #ffffff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        input {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4A2871;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        a {
+            display: inline-block;
+            align-self: baseline;
+            background-color: #fff;
+            margin: 15px;
+            padding: 10px 20px;
+            color: #683b95;
+            font-size: 1.15em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #47246a;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #26212b;
+            color: #fff;
+        }
+
+        .student-info {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+            max-width: 600px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            color: #333;
+        }
+
+        .student-info h2 {
+            color: #663399;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .info-value {
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .decorative-shape-left {
+            position: absolute;
+            top: 0;
+            left: -50px;
+            height: 100%;
+            width: 150px;
+            background-color: #ffffff;
+            transform: skewX(-20deg);
+            z-index: -1;
+        }
+
+        .decorative-shape-right {
+            position: absolute;
+            top: 0;
+            right: -50px;
+            height: 100%;
+            width: 150px;
+            background-color: #ffffff;
+            transform: skewX(20deg);
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="decorative-shape-left"></div>
+    <div class="decorative-shape-right"></div>
+    <h1>Welcome Student</h1>
+
+    <div class="student-info">
+        <h2>Student Information</h2>
+        <div class="info-row">
+            <span class="info-label">First Name:</span>
+            <span class="info-value">{{ student['Student_Fname'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Last Name:</span>
+            <span class="info-value">{{ student['Student_Lname'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Major:</span>
+            <span class="info-value">{{ student['Major'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Credits Taken:</span>
+            <span class="info-value">{{ student['Credits_Taken'] }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Student ID:</span>
+            <span class="info-value">{{ student['Student_ID'] }}</span>
+        </div>
+    </div>
+
+    <div>
+        <a href="/StudentCourses">View Courses</a>
+        <a href="/CourseRegistration">To Register for Courses</a><br></br>
+        <a href="/StudentCalendar">View Academic Calendar</a><br></br>
+        <a href="/StudentLogout">Logout</a>
+    </div>
+
+</body>
+
+</html>

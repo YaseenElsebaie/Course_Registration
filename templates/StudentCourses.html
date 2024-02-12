@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: #663399;">View and Rate Your Courses</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #dcdbdb, #eeecec);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #663399;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px 0px #888888;
+        }
+
+        th {
+            background-color: #d5d3d3;
+            border: 1px solid #a9a9a9;
+            padding: 20px;
+            font-size: 1.2em;
+        }
+
+        td {
+            border: 1px solid #a9a9a9;
+            padding: 15px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label, select, button {
+            margin: 5px;
+        }
+
+        select {
+            padding: 5px;
+        }
+
+        
+        input[type="submit"] {
+            margin:5px;
+            background-color: #ffffff;
+            color: #663399;
+            size: 20px;
+            border: 2px solid #663399;
+            border-radius: 15px;
+            border-bottom: 10px solid #663399;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover{
+            background-color: #663399;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+        
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>View Your Courses</h1>
+    
+    <form action="/CourseRating" method="POST">
+        <table>
+            <caption>Course Details</caption>
+            <th>Course Name</th>
+            <th>Course ID</th>
+            <th>Section ID</th>
+            <th>Grade</th>
+            <th>Update Rating</th>
+            <th>Confirm</th>
+
+            {% for line in takes %}
+                <tr>
+                    <td>{{line['Course_Name']}}</td>
+                    <td>{{line['Course_ID']}}</td>
+                    <td>{{line['Section_ID']}}</td>
+                    <td>{{line['Grade']}}</td>
+
+                    <td>
+                        Rate: <input type="number" name="Rating" min="1" max="10" value="10">
+                    </td>
+                    <td>
+                        Confirm: <input type="radio" name="Confirm" value="{{line}}">
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <a href="/StudentHome">Go Back</a>
+    <a href="/StudentLogout">Logout</a>
+</body>
+
+</html>

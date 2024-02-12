@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1,h2 {
+            color: #663399;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            margin:3px;
+            background-color: #ffffff;
+            color: #663399;
+            
+            border: 2px solid #663399;
+            border-radius: 15px;
+            border-bottom: 10px solid #663399;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover{
+            background-color: #663399;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+        .decorative-shape {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 130%;
+            width: 13%;
+            background-color: #663399;
+            clip-path: polygon(100% 0, 0% 50%, 100% 100%);
+        }
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="decorative-shape"></div>
+
+    <h2>To Create a new student account, fill out the registration form below</h2>
+
+    <form action="/StudentRegister" method="POST">
+
+        <label for="Student_ID">Email</label>
+        <input type="text" name="Student_ID" required>
+
+        <label for="Student_Password">Password</label>
+        <input type="password" name="Student_Password" required/>
+
+        <label for="Student_Fname">First Name</label>
+        <input type="text" name="Student_Fname" required/>
+
+        <label for="Student_Lname">Last Name</label>
+        <input type="text" name="Student_Lname" required/>
+
+        <label for="Major">Major</label>
+        <input type="text" name="Major" placeholder="Major" required/>
+
+        <label for="Credits_Taken">Credits Taken</label>
+        <input type="number" name="Credits_Taken" required/>
+
+        <input type="submit" value="Register Student" /> <br> <br>
+
+        {% if error %}
+            <p class="error"><strong>Error:</strong> {{error}}</p>
+        {% endif %}
+    </form>
+
+    <a href="/">Go Back</a>
+
+</body>
+
+</html>

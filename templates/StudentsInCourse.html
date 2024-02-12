@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Information and Student Grade Update</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #663399; 
+            background-color: #dddcdc;
+            background: linear-gradient(to bottom, #dcdbdb, #eeecec);
+        }
+
+        h1 {
+            color: #663399;
+        }
+
+
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 25px;
+            border-collapse: collapse;
+            
+        }
+
+
+        th, td {
+            border: 1px solid #aeabb1;
+            text-align: left;
+            padding: 12px;
+            color: #060606;
+        }
+
+        th {
+            background-color:  #663399;
+            color: #ffffff; 
+        }
+
+
+        input[type="submit"] {
+            margin:5px;
+            background-color: #ffffff;
+            color: #663399;
+            size: 20px;
+            border: 2px solid #663399;
+            border-radius: 15px;
+            border-bottom: 10px solid #663399;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover{
+            background-color: #663399;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Students in {{Course_ID}}</h1>
+
+    <form action="/GradeStudents" method="POST">
+        <table>
+    
+            <th>Student First Name</th> 
+            <th>Student Last Name</th> 
+            <th>Student ID</th>   
+            <th>Grade</th> 
+            <th>Update Grade</th>
+
+            {% for line in students %}
+            <tr>
+                <td>{{line['Student_Fname']}}</td>
+                <td>{{line['Student_Lname']}}</td>
+                <td>{{line['Student_ID']}}</td>
+                
+                <td>
+                    Update Grade: <input type="number" name="Grade" min="1" max="100" value="100">
+                </td>
+                <td>
+                    Confirm: <input type="radio" name="Confirm" value="{{line}}">
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br><br />
+        <input type="submit" value="Submit">
+    </form>
+    <br></br>
+    <a href="/InstructorHome">Go Back</a>
+
+    <a href="/InstructorLogout">Logout</a>
+
+</body>
+
+</html>

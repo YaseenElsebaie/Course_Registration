@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Information and Section Choice</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(to bottom, #dcdbdb, #eeecec);
+        }
+
+        h1 {
+            color: #663399;
+        }
+
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px 0px #888888;
+        }
+
+        th {
+            background-color: #d5d3d3;
+            border: 1px solid #a9a9a9;
+            padding: 15px;
+            font-size: 1.2em;
+        }
+
+        td {
+            border: 1px solid #a9a9a9;
+            padding: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button[type="submit"] {
+            margin:5px;
+            background-color: #ffffff;
+            color: #663399;
+            size: 20px;
+            border: 2px solid #663399;
+            border-radius: 15px;
+            border-bottom: 10px solid #663399;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover{
+            background-color: #663399;
+            color: #ffffff;
+        }
+        
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            color: #663399;
+            font-size: 1.2em;
+            border: 2px solid #663399;
+            border-radius: 10px;
+            border-bottom: 10px solid #663399;
+        }
+
+        a:hover {
+            background-color: #663399;
+            color: #ffffff;
+        }
+        .error {
+            color: #ff0000;
+            margin-top: 10px;
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <h1>Course Information</h1>
+
+    <table>
+        <tr>
+            <th>Instructor ID</th>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Course Credits</th>
+            <th>Course Description</th>
+            <th>Department Name</th>
+            <th>Semester</th>
+            <th>Student Limit</th>
+        </tr>
+        <tr>
+            <td>{{ line['Instructor_ID'] }}</td>
+            <td>{{ line['Course_ID'] }}</td>
+            <td>{{line['Course_Name']}}</td>
+            <td>{{ line['Course_Credits'] }}</td>
+            <td>{{ line['Course_Description'] }}</td>
+            <td>{{ line['Department_Name'] }}</td>
+            <td>{{ line['Semester'] }}</td>
+            <td>{{ line['Student_Limit'] }}</td>
+        </tr>
+    </table>
+
+    <h2>Section 1</h2>
+
+    <table>
+        <tr>
+            <th>Section ID</th>
+            <th>Section Day</th>
+            <th>Section Time</th>
+        </tr>
+        <tr>
+            <td>{{ line['Section_ID'] }}</td>
+            <td>{{ line['Section_Day'] }}</td>
+            <td>{{ line['Section_Time'] }}</td>
+        </tr>
+    </table>
+
+    <h2>Section 2</h2>
+
+    <table>
+        <tr>
+            <th>Section ID</th>
+            <th>Section Day</th>
+            <th>Section Time</th>
+        </tr>
+        <tr>
+            <td>{{ line['Section2_ID'] }}</td>
+            <td>{{ line['Section2_Day'] }}</td>
+            <td>{{ line['Section2_Time'] }}</td>
+        </tr>
+    </table>
+
+    <h1>Choose a Section</h1>
+
+    <form method="post" action="/InsertSectionChoice">
+        <label for="Selected_Section"></label>
+        <select name="Selected_Section" id="Selected_Section">
+            <option value="Section1">Section 1</option>
+            <option value="Section2">Section 2</option>
+        </select>
+        <br>
+        <button type="submit">Submit Choice</button>
+    </form>
+
+    <br></br>
+    <a href="/InstructorHome">Go Back</a>
+    <a href="/InstructorLogout">Logout</a>
+</body>
+
+</html>
