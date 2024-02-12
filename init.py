@@ -1,5 +1,4 @@
 #Created by Yaseen Elsebaie
-#December 10th, 2023
 
 from asyncio.format_helpers import _get_function_source
 from calendar import c, month
@@ -62,15 +61,11 @@ def StudentloginAuth():
 	#grabs student login information from the forms
 	Student_ID = request.form['Student_ID']
 	password = request.form['Student_Password']
-    
 
-	cursor = conn.cursor()
 	
 	#executes query to check if student login is correct
-	query = 'SELECT Student_ID, Student_Password FROM Student WHERE Student_ID = %s and Student_Password = %s'
-	cursor.execute(query, (Student_ID, password))
-	data = cursor.fetchone()
 
+	data = fetch_one(student_login, (Student_ID, password))
 
 	error = None
 
@@ -80,18 +75,14 @@ def StudentloginAuth():
 		session['Student_ID'] = Student_ID
 
 		# Fetches student information for displaying on hommepage
-		Student_ID=session['Student_ID']
-		query2 = "Select * from Student where Student_ID=%s"
-		cursor.execute(query2, (Student_ID))
-		student = cursor.fetchone()
-		cursor.close()
+		student = fetch_one(fetch_student, (Student_ID))
+	
 	
 		return render_template('StudentHome.html', error=error, Student_ID=session['Student_ID'],student=student)
 	
 	else:	#if student does not exist
 		#returns an error message to the html page
 		error = 'Invalid login or username'
-		cursor.close()
 		return render_template('Logins.html', error=error)
 
 
@@ -103,17 +94,9 @@ def InstructorloginAuth():
 	#grabs instructor login information from the forms
 	Instructor_ID = request.form['Instructor_ID']
 	password = request.form['Instructor_Password']
-    
-	# Hashes the password
-	# password=hashlib.md5(password.encode())
 
-	cursor = conn.cursor()
-	
 	#executes query to check if instrcutor login is correct
-	query = 'SELECT Instructor_ID, Instructor_Password FROM Instructor WHERE Instructor_ID = %s and Instructor_Password = %s'
-	cursor.execute(query, (Instructor_ID, password))
-	data = cursor.fetchone()
-	
+	data = fetch_one(inst_login, (Instructor_ID, password))
 	error = None
 
 	#checks if the instructor exists
@@ -122,10 +105,7 @@ def InstructorloginAuth():
 		session['Instructor_ID']=Instructor_ID
 
 		#Gets instructor information to display on instructor homepage
-		query2 = "Select * from Instructor where Instructor_ID=%s"
-		cursor.execute(query2, (Instructor_ID))
-		instructor = cursor.fetchone()
-		cursor.close()
+		instructor = fetch_one(fetch_inst, Instructor_ID)
 		return render_template('InstructorHome.html', error=error, instructor=instructor)
 
 	else:
@@ -146,15 +126,15 @@ def AdminloginAuth():
 	# Hashes the password
 	# password=hashlib.md5(password.encode())
 
-	cursor = conn.cursor()
+	# cursor = conn.cursor()
 
 	#executes query to check if admin ogin is correct
-	query = 'SELECT Admin_ID, Admin_Password FROM Administrator WHERE Admin_ID = %s and Admin_Password = %s'
-	cursor.execute(query, (Admin_ID, password))
-	data = cursor.fetchone()
+	# query = 'SELECT Admin_ID, Admin_Password FROM Administrator WHERE Admin_ID = %s and Admin_Password = %s'
+	# cursor.execute(query, (Admin_ID, password))
+	# data = cursor.fetchone()
 
-	cursor.close()
-
+	# cursor.close()
+	data = fetch_one(admin_login, (Admin_ID, password))
 	error = None
 
 	#checks if admin exists and routes to admin homepage
@@ -203,13 +183,14 @@ def AdminHome():
 @app.route('/InstructorHome')
 def InstructorHome():
 		
-	cursor = conn.cursor()
+	# cursor = conn.cursor()
 
 	#Query that Gets instructor information to display it on instructor homepage after login
-	query2 = "Select * from Instructor where Instructor_ID=%s"
-	cursor.execute(query2, (session['Instructor_ID']))
-	instructor = cursor.fetchone()
-	cursor.close()
+	# query2 = "Select * from Instructor where Instructor_ID=%s"
+	# cursor.execute(query2, (session['Instructor_ID']))
+	# instructor = cursor.fetchone()
+	# cursor.close()
+	instructor = fetch_one(inst_info, (session['Instructor_ID']))
 
 	return render_template('InstructorHome.html', error=error, instructor=instructor)
 
@@ -220,12 +201,13 @@ def InstructorHome():
 def StudentHome(): 
 
 	#Query to fetch student information for displaying on student homepage after login
-	cursor = conn.cursor()
-	Student_ID=session['Student_ID']
-	query2 = "Select * from Student where Student_ID=%s"
-	cursor.execute(query2, (Student_ID))
-	student = cursor.fetchone()
-	cursor.close()
+	# cursor = conn.cursor()
+	# Student_ID=session['Student_ID']
+	# query2 = "Select * from Student where Student_ID=%s"
+	# cursor.execute(query2, (Student_ID))
+	# student = cursor.fetchone()
+	# cursor.close()
+	student = fetch_one(student_info, (session['Student_ID']))
 
 	return render_template('StudentHome.html', student=student)
 
@@ -279,13 +261,13 @@ def student_register():
 	
 	try:
 
-		#Query to Register a student and create profile with form values
-		query1= "INSERT INTO Student (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken) VALUES (%s, %s,%s, %s, %s, %s)"
-		cursor.execute(query1, (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken))
-		conn.commit()
+		# #Query to Register a student and create profile with form values
+		# query1= "INSERT INTO Student (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken) VALUES (%s, %s,%s, %s, %s, %s)"
+		# cursor.execute(query1, (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken))
+		# conn.commit()
 		
-		cursor.close()
-		
+		# cursor.close()
+		insert(register_student, (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken))
 		return redirect('/')
 
 	except Exception as e:		#if error when inserting student to database
