@@ -76,8 +76,6 @@ def StudentloginAuth():
 
 		# Fetches student information for displaying on hommepage
 		student = fetch_one(fetch_student, (Student_ID))
-	
-	
 		return render_template('StudentHome.html', error=error, Student_ID=session['Student_ID'],student=student)
 	
 	else:	#if student does not exist
@@ -123,17 +121,6 @@ def AdminloginAuth():
 	Admin_ID = request.form['Admin_ID']
 	password = request.form['Admin_Password']
     
-	# Hashes the password
-	# password=hashlib.md5(password.encode())
-
-	# cursor = conn.cursor()
-
-	#executes query to check if admin ogin is correct
-	# query = 'SELECT Admin_ID, Admin_Password FROM Administrator WHERE Admin_ID = %s and Admin_Password = %s'
-	# cursor.execute(query, (Admin_ID, password))
-	# data = cursor.fetchone()
-
-	# cursor.close()
 	data = fetch_one(admin_login, (Admin_ID, password))
 	error = None
 
@@ -183,13 +170,6 @@ def AdminHome():
 @app.route('/InstructorHome')
 def InstructorHome():
 		
-	# cursor = conn.cursor()
-
-	#Query that Gets instructor information to display it on instructor homepage after login
-	# query2 = "Select * from Instructor where Instructor_ID=%s"
-	# cursor.execute(query2, (session['Instructor_ID']))
-	# instructor = cursor.fetchone()
-	# cursor.close()
 	instructor = fetch_one(inst_info, (session['Instructor_ID']))
 
 	return render_template('InstructorHome.html', error=error, instructor=instructor)
@@ -200,13 +180,6 @@ def InstructorHome():
 @app.route('/StudentHome')
 def StudentHome(): 
 
-	#Query to fetch student information for displaying on student homepage after login
-	# cursor = conn.cursor()
-	# Student_ID=session['Student_ID']
-	# query2 = "Select * from Student where Student_ID=%s"
-	# cursor.execute(query2, (Student_ID))
-	# student = cursor.fetchone()
-	# cursor.close()
 	student = fetch_one(student_info, (session['Student_ID']))
 
 	return render_template('StudentHome.html', student=student)
@@ -262,11 +235,7 @@ def student_register():
 	try:
 
 		# #Query to Register a student and create profile with form values
-		# query1= "INSERT INTO Student (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken) VALUES (%s, %s,%s, %s, %s, %s)"
-		# cursor.execute(query1, (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken))
-		# conn.commit()
 		
-		# cursor.close()
 		insert(register_student, (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken))
 		return redirect('/')
 
@@ -290,17 +259,10 @@ def Course_Search_Name():
 	Course_Name = request.form['Course_Name']
 
 	#Query to get all available courses with that name
-	cursor =conn.cursor()
-	get_courses = 'SELECT * FROM Course WHERE Course_Name=%s'
-	cursor.execute(get_courses, (Course_Name))
-	Courses=cursor.fetchall()
+	Courses = fetch_all(fetch_course_name, Course_Name)
 
-	#Query to get all available Sections for the courses
-	get_sections = 'Select * FROM Section WHERE Course_Name=%s'
-	cursor.execute(get_sections,(Course_Name))
-	Sections=cursor.fetchall()
-
-	cursor.close()
+	#Get all available Sections for the course name
+	Sections = fetch_all(fetch_section_name, Course_Name)
 
 	return render_template('SearchByName.html', Courses =Courses, Sections=Sections)
 
@@ -314,17 +276,10 @@ def Course_Search_Instructor():
 	Instructor_Name = request.form['Instructor_Name']
 
 	#Query to get all available courses 
-	cursor =conn.cursor()
-	get_courses = 'SELECT * FROM Course Natural Join Section Natural Join Teaches Natural Join Instructor WHERE Instructor_Fname=%s'
-	cursor.execute(get_courses, (Instructor_Name))
-	Courses=cursor.fetchall()
+	Courses = fetch_all(fetch_course_inst, Instructor_Name)
 
-	#Query to get all available Sections for the courses
-	get_sections = 'Select * FROM Teaches Natural Join Section Natural Join Instructor WHERE Instructor_Fname=%s'
-	cursor.execute(get_sections,(Instructor_Name))
-	Sections=cursor.fetchall()
-
-	cursor.close()
+	#Query to get all available Sections taught by instructor
+	Sections = fetch_all(fetch_section_inst, Instructor_Name)
 
 	return render_template('SearchByInstructor.html', Courses =Courses, Sections=Sections, Instructor_Name=Instructor_Name)
 
@@ -337,18 +292,11 @@ def Course_Search_Dept():
 	#get department name for search from the input
 	Department_Name = request.form['Department_Name']
 
-	#Query to get all available courses 
-	cursor =conn.cursor()
-	get_courses = 'SELECT * FROM Course WHERE Department_Name=%s'
-	cursor.execute(get_courses, (Department_Name))
-	Courses=cursor.fetchall()
+	#Query to get all available courses in department 
+	Courses = fetch_all(fetch_course_dept, Department_Name)
 
-	#Query to get all available Sections for the courses
-	get_sections = 'Select * FROM Section Natural Join Course WHERE Department_Name=%s'
-	cursor.execute(get_sections,(Department_Name))
-	Sections=cursor.fetchall()
-
-	cursor.close()
+	#Query to get all available Sections under the department
+	Sections = fetch_all(fetch_section_dept, Department_Name)
 
 	return render_template('SearchByDepartment.html', Courses =Courses, Sections=Sections, Department_Name=Department_Name)
 
@@ -361,11 +309,7 @@ def StudentCourses():
 	Student = session['Student_ID']
 	
 	#Query to fetch all course details taken by student
-	cursor =conn.cursor()
-	get_courses = 'SELECT * FROM Takes Natural Join Course WHERE Student_ID=%s'
-	cursor.execute(get_courses, (Student))
-	takes=cursor.fetchall()
-	cursor.close()
+	takes = fetch_all(fetch_student_courses, Student)
 
 	return render_template('StudentCourses.html', takes = takes)
 
@@ -1064,57 +1008,6 @@ def InsertSectionChoice():
 	cursor.close()
 
 	return redirect('/InstructorHome')
-
-# def create_course_and_section(course_data, section_data, instructor_id):
-#     cursor = conn.cursor()
-
-#     # Query to create the new course
-#     query = "INSERT INTO Course (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name ) VALUES (%s, %s,%s, %s, %s)"
-#     cursor.execute(query, (course_data['Course_ID'], course_data['Course_Name'], course_data['Course_Credits'], course_data['Course_Description'], course_data['Department_Name']))
-#     conn.commit()
-
-#     # Query to create the new section
-#     section_query = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-#     cursor.execute(section_query, (section_data['Section_ID'], course_data['Course_ID'], course_data['Course_Name'], course_data['Semester'], section_data['Section_Day'], section_data['Section_Time'], section_data['Student_Limit']))
-#     conn.commit()
-
-#     # Query to assign the instructor to the new section
-#     teaches_query = "INSERT INTO Teaches (Course_ID, Instructor_ID, Section_ID) VALUES (%s, %s, %s)"
-#     cursor.execute(teaches_query, (course_data['Course_ID'], instructor_id, section_data['Section_ID']))
-#     conn.commit()
-
-#     cursor.close()
-
-# def delete_choice_option(instructor_id, course_id, section_id, section2_id):
-#     cursor = conn.cursor()
-
-#     # Query to delete the choice options after the section is chosen and created
-#     delete_choice = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s AND Section_ID = %s AND Section2_ID = %s"
-#     cursor.execute(delete_choice, (instructor_id, course_id, section_id, section2_id))
-#     conn.commit()
-
-#     cursor.close()
-
-# @app.route('/InsertSectionChoice', methods=['GET', 'POST'])
-# def InsertSectionChoice():
-#     instructor_id = session['Instructor_ID']
-#     selected_section = request.form['Selected_Section']
-#     cursor = conn.cursor()
-
-#     get_choice_query = 'SELECT * FROM Choice WHERE Instructor_ID = %s'
-#     cursor.execute(get_choice_query, (instructor_id,))
-#     choice = cursor.fetchone()
-
-#     if selected_section == 'Section1':
-#         create_course_and_section(choice, choice, instructor_id)
-#         delete_choice_option(instructor_id, choice['Course_ID'], choice['Section_ID'], choice['Section2_ID'])
-#     elif selected_section == 'Section2':
-#         create_course_and_section(choice, choice, instructor_id)
-#         delete_choice_option(instructor_id, choice['Course_ID'], choice['Section_ID'], choice['Section2_ID'])
-
-#     cursor.close()
-
-#     return redirect('/InstructorHome')
 
 
 
