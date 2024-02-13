@@ -62,7 +62,7 @@ search_cinst = "SELECT * FROM Section Natural Join Teaches Natural Join Instruct
 #	(Insert Student into section) 
 enroll_student = "INSERT INTO Takes (Course_ID, Student_ID, Section_ID) VALUES (%s, %s,%s)"
 #	(Fetch Credits of course) 
-fetch_course_credits = "Select Course_Credits from Course Where Course_ID = %s"
+get_credits = "Select Course_Credits from Course Where Course_ID = %s"
 #	(Update student’s taken credits) 
 update_credits = "Update Student SET Credits_Taken = Credits_Taken + %s"
 
@@ -74,11 +74,11 @@ fetch_inst = "Select * from Instructor where Instructor_ID=%s"
 
 
 #	(Fetch instructor courses) 
-fetch_inst_courses = "SELECT * FROM Teaches WHERE Instructor_ID=%s"
+inst_courses = "SELECT * FROM Teaches WHERE Instructor_ID=%s"
 
 
 #	(Fetch students in the course) 
-fetch_student_enrolled = "Select * from (Takes Natural Join Student Natural Join Teaches)  where (Course_ID = %s) and (Section_ID = %s) and (Instructor_ID = %s)"
+students_enrolled = "Select * from (Takes Natural Join Student Natural Join Teaches)  where (Course_ID = %s) and (Section_ID = %s) and (Instructor_ID = %s)"
 
 
 #	(Insert/Update student’s grade) 
@@ -129,5 +129,6 @@ check_section = "Select * FROM Section Where Section_ID = %s and Course_ID = %s"
 
 #	(Create Choice) 
 create_choice = "INSERT INTO Choice (Admin_ID, Instructor_ID, Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name, Semester, Student_Limit, Section_ID, Section_Day, Section_Time, Section2_ID, Section2_Day, Section2_Time) VALUES (%s, %s, %s, %s,%s, %s, %s, %s,  %s, %s, %s, %s, %s, %s, %s)"
+
 
 
