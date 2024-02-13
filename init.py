@@ -657,12 +657,7 @@ def ViewInstructorCourses():
 	Instructor = session['Instructor_ID']
 	
 	#Executes query to fetch details of all courses taught by this instructor
-	cursor =conn.cursor()
-	get_courses = 'SELECT * FROM Teaches WHERE Instructor_ID=%s'
-	cursor.execute(get_courses, (Instructor))
-	teaches=cursor.fetchall()
-
-	cursor.close()
+	teaches = fetch_all(inst_courses, Instructor)
 
 	return render_template('InstructorCourses.html', teaches=teaches)
 
@@ -674,7 +669,6 @@ def CourseStudents():
 	
 	if 'View_Students' in request.form:	#checks if instructor would like to view their courses
 		
-		cursor =conn.cursor()
 		Course = request.form['View_Students']
 		Course=yaml.safe_load(Course)
 		
@@ -683,12 +677,7 @@ def CourseStudents():
 		Section_ID = Course['Section_ID']
 		
 		#Executes query for getting students based on course and section ID and instructor teaching
-		get_students="Select * from (Takes Natural Join Student Natural Join Teaches)  where (Course_ID = %s) and (Section_ID = %s) and (Instructor_ID = %s)"
-		cursor.execute(get_students,(Course_ID, Section_ID, Instructor))
-		students =  cursor.fetchall()
-		conn.commit()
-		
-		cursor.close()
+		students = fetch_all(students_enrolled, (Course_ID, Section_ID, Instructor))
 		
 		return render_template('StudentsInCourse.html', students=students, Course_ID=Course_ID)
 
@@ -700,10 +689,7 @@ def CourseStudents():
 @app.route('/GradeStudents',methods=['GET', 'POST'])
 def GradeStudents():
 	
-	
 	if ('Confirm' in request.form):		#Check if instructor would like to update and fetches which student to assign grade to
-		
-		cursor =conn.cursor()
 		
 		#Get grade value from instructor input to update database
 		Grade = request.form['Grade']
@@ -716,11 +702,7 @@ def GradeStudents():
 		Course_ID = Confirm['Course_ID']
 
 		#Executes query for inserting student grade
-		update_grade="UPDATE Takes SET Grade = %s WHERE (Student_ID = %s) and (Section_ID = %s) and (Course_ID = %s)"
-		cursor.execute(update_grade,(Grade, Student, Section_ID, Course_ID))
-		conn.commit()
-			
-		cursor.close()
+		insert(update_grade, (Grade, Student, Section_ID, Course_ID))
 		
 	return redirect(url_for('CourseStudents'))
 
@@ -733,12 +715,7 @@ def StudentSearchName():
 	Course_Name = request.form['Course_Name']
 
 	#Query to get available section information
-	cursor =conn.cursor()
-	get_available_courses = 'SELECT * FROM Section Natural Join Instructor Natural Join Teaches Natural Join Course Natural Join coursesectioncapacitydiff where (Course_Name = %s) and (remaining_spots > 0)'
-	cursor.execute(get_available_courses, (Course_Name))
-	courses=cursor.fetchall()
-
-	cursor.close()
+	courses = fetch_all(search_cname, Course_Name)
 	
 	return render_template('StudentSearchCourseName.html',courses=courses)
 
@@ -751,12 +728,7 @@ def StudentSearchDepartment():
 	Department_Name = request.form['Department_Name']
 	
 	#Query to get available section information
-	cursor =conn.cursor()
-	get_available_courses = 'SELECT * FROM Section Natural Join Course Natural Join Instructor Natural Join Teaches Natural Join coursesectioncapacitydiff where (Department_Name = %s) and (remaining_spots > 0)'
-	cursor.execute(get_available_courses, (Department_Name))
-	courses=cursor.fetchall()
-	cursor.close()
-
+	courses = fetch_all(search_cdept, Department_Name)
 
 	return render_template('StudentSearchDepartment.html',courses=courses)
 
@@ -769,13 +741,9 @@ def StudentSearchInstructor():
 	Instructor_Name = request.form['Instructor_Name']
 	
 	#Query to get available section information
-	cursor =conn.cursor()
-	get_available_courses = 'SELECT * FROM Section Natural Join Teaches Natural Join Instructor Natural Join coursesectioncapacitydiff where (Instructor_Fname = %s) and (remaining_spots > 0)'
-	cursor.execute(get_available_courses, (Instructor_Name))
-	courses=cursor.fetchall()
+	courses = fetch_all(search_cinst, Instructor_Name)
 
-	cursor.close()
-	
+
 	return render_template('StudentSearchInstructor.html',courses=courses)
 
 
@@ -785,7 +753,7 @@ def StudentSearchInstructor():
 def Register():
 
 	if ('Register' in request.form):		#Checks if student chose to register
-		cursor =conn.cursor()
+		# cursor =conn.cursor()
 		
 		#Fetches data of which section is chosen
 		Register = request.form['Register']
@@ -799,17 +767,13 @@ def Register():
 		try:
 
 			#Executes query for inserting student into the section
-			Register_query="INSERT INTO Takes (Course_ID, Student_ID, Section_ID) VALUES (%s, %s,%s)"
-			cursor.execute(Register_query,(Course_ID, Student_ID, Section_ID))
-			conn.commit()
+			insert(enroll_student, (Course_ID, Student_ID, Section_ID))
 
 			#executes query to update student credits based on the registered course
-			get_credits="Select Course_Credits from Course Where Course_ID = %s"
-			cursor.execute(get_credits, Course_ID)
-			course_credits = cursor.fetchone()
-			Update_Credits="Update Student SET Credits_Taken = Credits_Taken + %s"
-			cursor.execute(Update_Credits, course_credits['Course_Credits'])
-			conn.commit()
+			course_credits = fetch_one(get_credits, Course_ID)
+
+			
+			insert(update_credits, course_credits['Course_Credits'])
 
 		except Exception as e:		#if registering the student to the section fails return error
 
@@ -817,7 +781,7 @@ def Register():
 			error = str(e)
 			return render_template('CourseRegistrationSearch.html', error=error)
 			
-		cursor.close()
+		# cursor.close()
 		
 	return redirect('/StudentHome')
 
@@ -857,16 +821,11 @@ def InsertChoice():
 	Section2_Day = request.form['Section2_Day']
 	Section2_Time = request.form['Section2_Time']
 
-
 	try:
 
 		#execute query to add the choice to the database for instrcutor to choose
-		cursor = conn.cursor()
-		query = "INSERT INTO Choice (Admin_ID, Instructor_ID, Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name, Semester, Student_Limit, Section_ID, Section_Day, Section_Time, Section2_ID, Section2_Day, Section2_Time) VALUES (%s, %s, %s, %s,%s, %s, %s, %s,  %s, %s, %s, %s, %s, %s, %s)"
-		cursor.execute(query,(Admin_ID, Instructor_ID, Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name, Semester, Student_Limit, Section_ID, Section_Day, Section_Time, Section2_ID, Section2_Day, Section2_Time))
-		conn.commit()
-
-		cursor.close()
+		insert(create_choice, (Admin_ID, Instructor_ID, Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name, Semester, Student_Limit, Section_ID, Section_Day, Section_Time, Section2_ID, Section2_Day, Section2_Time))
+		
 		return render_template('AdminProposeChoice.html')
 
 	except Exception as e:		#if adding the choice fails returns error
@@ -885,10 +844,7 @@ def ViewChoice():
 	Instructor_ID = session['Instructor_ID']
 
 	#Fetches the most recent choice options for the instructor to choose
-	cursor =conn.cursor()
-	get_choice = 'SELECT * FROM Choice where Instructor_ID = %s'
-	cursor.execute(get_choice, (Instructor_ID))
-	line=cursor.fetchone()
+	line = fetch_one(fetch_choice, Instructor_ID)
 
 	return render_template('InstructorChoice.html', line= line)
 
@@ -901,58 +857,44 @@ def InsertSectionChoice():
 	Instructor_ID = session['Instructor_ID']
 
 	cursor =conn.cursor()
-	get_choice = 'SELECT * FROM Choice where Instructor_ID = %s'
-	cursor.execute(get_choice, (Instructor_ID))
-	course=cursor.fetchone()
+	# get_choice = 'SELECT * FROM Choice where Instructor_ID = %s'
+	# cursor.execute(get_choice, (Instructor_ID))
+	# course=cursor.fetchone()
+	course =  fetch_one(fetch_choice, Instructor_ID)
 	
 	Selected_Section = request.form['Selected_Section']
 
 	if (Selected_Section == 'Section1'):	#if chosen section is the first section
 		
 		#Query to create the new course
-		query = "INSERT INTO Course (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name ) VALUES (%s, %s,%s, %s, %s)"
-		cursor.execute(query,(course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
-		conn.commit()
+		insert(create_course, (course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
 
 		#Query to create the new section
-		section1_query = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-		cursor.execute(section1_query,(course['Section_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section_Day'], course['Section_Time'], course['Student_Limit']))
-		conn.commit()
+		insert(create_section, (course['Section_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section_Day'], course['Section_Time'], course['Student_Limit']))
 
 		#Query to assign the instructor to the new section
-		teaches1 = "Insert Into Teaches (Course_ID, Instructor_ID, Section_ID) VALUES (%s, %s, %s)"
-		cursor.execute(teaches1,(course['Course_ID'], Instructor_ID, course['Section_ID']))
-		conn.commit()
+		insert(assign_inst, (course['Course_ID'], Instructor_ID, course['Section_ID']))
 
 		#Query to delete the choice options after the section is chosen and created
-		delete_choice = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s AND Section_ID = %s AND Section2_ID = %s"
-		cursor.execute(delete_choice, (Instructor_ID, course['Course_ID'], course['Section_ID'], course['Section2_ID']))
-		conn.commit()
+		insert(delete_choice, (Instructor_ID, course['Course_ID'], course['Section_ID'], course['Section2_ID']))
 
 
 
 	elif (Selected_Section == 'Section2'):		#if chosen section is the second section
 
 		#Query to create the new course
-		query = "INSERT INTO Course (Course_ID, Course_Name, Course_Credits, Course_Description, Department_Name ) VALUES (%s, %s,%s, %s, %s)"
-		cursor.execute(query,(course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
-		conn.commit()
+		insert(create_course, (course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
 
 		#Query to create the new section
-		section2_query = "INSERT INTO Section (Section_ID, Course_ID, Course_Name, Semester, Section_Day, Section_Time, Student_Limit ) VALUES (%s, %s,%s, %s, %s, %s, %s)"
-		cursor.execute(section2_query,(course['Section2_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section2_Day'], course['Section2_Time'], course['Student_Limit']))
-		conn.commit()
+		insert(create_section, (course['Section2_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section2_Day'], course['Section2_Time'], course['Student_Limit']))
 
 		#Query to assign the instructor to the new section
-		teaches2 = "Insert Into Teaches (Course_ID, Instructor_ID, Section_ID) VALUES (%s, %s, %s)"
-		cursor.execute(teaches2,(course['Course_ID'], Instructor_ID, course['Section2_ID']))
-		conn.commit()
+		insert(assign_inst, (course['Course_ID'], Instructor_ID, course['Section2_ID']))
+
 
 		#Query to delete the choice options after the section is chosen and created
-		delete2_choice = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s AND Section_ID = %s AND Section2_ID = %s"
-		cursor.execute(delete2_choice, (Instructor_ID, course['Course_ID'], course['Section_ID'], course['Section2_ID']))
-		conn.commit()
-		
+		insert(delete_choice, (Instructor_ID, course['Course_ID'], course['Section_ID'], course['Section2_ID']))
+
 
 	cursor.close()
 
@@ -966,4 +908,5 @@ app.secret_key = 'some key that you will never guess'
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
+
 
