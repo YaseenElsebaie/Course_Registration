@@ -27,6 +27,8 @@ def fetch_all(query, parameters=None):
     try:
         cursor.execute(query, parameters)
         result = cursor.fetchall()
+    except:
+        return None
     finally:
         cursor.close()
     return result

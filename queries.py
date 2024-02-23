@@ -12,7 +12,7 @@ register_student = "INSERT INTO Student (Student_ID, Student_Password, Student_F
 
 
 #	(Fetch Courses with specific name) 
-fetch_course_name = "SELECT * FROM Course WHERE Course_Name=%s"
+FETCH_COURSE_NAME = "SELECT * FROM Course WHERE Course_Name=%s"
 
 #	(Fetch Sections of that course)
 fetch_section_name = "SELECT * FROM Section WHERE Course_Name=%s"
