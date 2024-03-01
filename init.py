@@ -58,7 +58,7 @@ def login():
 def StudentloginAuth():
 
 	#executes query to check if student login is correct
-	data = fetch_one(student_login, (request.form['Student_ID'], request.form['Student_Password']))
+	data = fetch_one(STUDENT_LOGIN, (request.form['Student_ID'], request.form['Student_Password']))
 
 	error = None
 
@@ -68,7 +68,7 @@ def StudentloginAuth():
 		session['Student_ID'] = request.form['Student_ID']
 
 		# Fetches student information for displaying on hommepage
-		student = fetch_one(fetch_student, (request.form['Student_ID']))
+		student = fetch_one(FETCH_STUDENT, (request.form['Student_ID']))
 		return render_template('StudentHome.html', error=error, Student_ID=session['Student_ID'],student=student)
 	
 	else:	#if student does not exist
@@ -83,7 +83,7 @@ def StudentloginAuth():
 def InstructorloginAuth():
 
 	#executes query to check if instrcutor login is correct
-	data = fetch_one(inst_login, (request.form['Instructor_ID'], request.form['Instructor_Password']))
+	data = fetch_one(INST_LOGIN, (request.form['Instructor_ID'], request.form['Instructor_Password']))
 	error = None
 
 	#checks if the instructor exists
@@ -92,7 +92,7 @@ def InstructorloginAuth():
 		session['Instructor_ID']=request.form['Instructor_ID']
 
 		#Gets instructor information to display on instructor homepage
-		instructor = fetch_one(fetch_inst, request.form['Instructor_ID'])
+		instructor = fetch_one(FETCH_INST, request.form['Instructor_ID'])
 		return render_template('InstructorHome.html', error=error, instructor=instructor)
 
 	else:
@@ -107,7 +107,7 @@ def InstructorloginAuth():
 def AdminloginAuth():
 	
     #executes query to check if admin login is correct
-	data = fetch_one(admin_login, (request.form['Admin_ID'], request.form['Admin_Password']))
+	data = fetch_one(ADMIN_LOGIN, (request.form['Admin_ID'], request.form['Admin_Password']))
 	error = None
 
 	#checks if admin exists and routes to admin homepage
@@ -155,7 +155,7 @@ def AdminHome():
 @app.route('/InstructorHome')
 def InstructorHome():
 		
-	instructor = fetch_one(inst_info, (session['Instructor_ID']))
+	instructor = fetch_one(INST_INFO, (session['Instructor_ID']))
 
 	return render_template('InstructorHome.html', error=error, instructor=instructor)
 
@@ -165,7 +165,7 @@ def InstructorHome():
 @app.route('/StudentHome')
 def StudentHome(): 
 
-	student = fetch_one(student_info, (session['Student_ID']))
+	student = fetch_one(STUDENT_INFO, (session['Student_ID']))
 
 	return render_template('StudentHome.html', student=student)
 
@@ -207,7 +207,7 @@ def student_register():
 	
 	try:
 		# #Query to Register a student and create profile with form values	
-		insert(register_student, (request.form['Student_ID'], request.form['Student_Password'], request.form['Student_Fname'], request.form['Student_Lname'], request.form['Major'], request.form['Credits_Taken']))
+		insert(REGISTER_STUDENT, (request.form['Student_ID'], request.form['Student_Password'], request.form['Student_Fname'], request.form['Student_Lname'], request.form['Major'], request.form['Credits_Taken']))
 		
 		return redirect('/')
 
@@ -227,12 +227,12 @@ def Course_Search_Name():
 
 
 	#Query to get all available courses with that name
-	Courses = fetch_all(FETCH_COURSE_NAME, request.form['Course_Name'])
+	courses = fetch_all(FETCH_COURSE_NAME, request.form['Course_Name'])
 
 	#Get all available Sections for the course name
-	Sections = fetch_all(fetch_section_name, request.form['Course_Name'])
+	sections = fetch_all(FETCH_SECTION_NAME, request.form['Course_Name'])
 
-	return render_template('SearchByName.html', Courses =Courses, Sections=Sections)
+	return render_template('SearchByName.html', Courses =courses, Sections=sections)
 
 
 #route to search for courses based on instructor name
@@ -240,12 +240,12 @@ def Course_Search_Name():
 def Course_Search_Instructor():
 
 	#Query to get all available courses 
-	Courses = fetch_all(fetch_course_inst, request.form['Instructor_Name'])
+	courses = fetch_all(FETCH_COURSE_INST, request.form['Instructor_Name'])
 
 	#Query to get all available Sections taught by instructor
-	Sections = fetch_all(fetch_section_inst, request.form['Instructor_Name'])
+	sections = fetch_all(FETCH_SECTION_INST, request.form['Instructor_Name'])
 
-	return render_template('SearchByInstructor.html', Courses =Courses, Sections=Sections, Instructor_Name=request.form['Instructor_Name'])
+	return render_template('SearchByInstructor.html', Courses =courses, Sections=sections, Instructor_Name=request.form['Instructor_Name'])
 
 
 #route to Search for courses by department
@@ -253,12 +253,12 @@ def Course_Search_Instructor():
 def Course_Search_Dept():
 
 	#Query to get all available courses in department 
-	Courses = fetch_all(fetch_course_dept, request.form['Department_Name'])
+	courses = fetch_all(FETCH_COURSE_DEPT, request.form['Department_Name'])
 
 	#Query to get all available Sections under the department
-	Sections = fetch_all(fetch_section_dept, request.form['Department_Name'])
+	sections = fetch_all(FETCH_SECTION_DEPT, request.form['Department_Name'])
 
-	return render_template('SearchByDepartment.html', Courses =Courses, Sections=Sections, Department_Name=request.form['Department_Name'])
+	return render_template('SearchByDepartment.html', Courses =courses, Sections=sections, Department_Name=request.form['Department_Name'])
 
 
 # Route to student's taken courses page
@@ -266,7 +266,7 @@ def Course_Search_Dept():
 def StudentCourses():
 	
 	#Query to fetch all course details taken by student
-	takes = fetch_all(fetch_student_courses, session['Student_ID'])
+	takes = fetch_all(FETCH_STUDENT_COURSES, session['Student_ID'])
 
 	return render_template('StudentCourses.html', takes = takes)
 
@@ -278,12 +278,12 @@ def Rating():
 	if ('Confirm' in request.form):		#Check is student chooses to update the rating
 
 		#Get Values from the form
-		Confirm = request.form['Confirm']
+		confirm = request.form['Confirm']
 
-		Confirm=yaml.safe_load(Confirm)
+		confirm=yaml.safe_load(confirm)
 
 		#Executes query for inserting rating
-		insert(update_rating, (request.form['Rating'], session['Student_ID'], Confirm['Section_ID'], Confirm['Course_ID']) )
+		insert(UPDATE_RATING, (request.form['Rating'], session['Student_ID'], confirm['Section_ID'], confirm['Course_ID']) )
 			
 		
 	return redirect('/StudentHome')
@@ -309,10 +309,10 @@ def AdminInsertCourse():
 
 	try:
 		#execute query to add the course
-		insert(create_course, (request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name']))
+		insert(CREATE_COURSE, (request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name']))
 
 		#execute query to add the section
-		insert(create_section,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'],  request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']) )
+		insert(CREATE_SECTION,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'],  request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']) )
 
 		return redirect(url_for('AdminCreateCourse'))
 	
@@ -335,11 +335,11 @@ def AdminCreateSection():
 def AdminInsertSection():
 
 	#execute query to check the course
-	course = fetch_all(check_course, request.form['Course_ID'])
+	course = fetch_all(CHECK_COURSE, request.form['Course_ID'])
 
 	if (course):
 		#execute query to add the section
-		insert(create_section,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']) )
+		insert(CREATE_SECTION,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']) )
 
 	else:
 		#returns an error message to the html page
@@ -362,15 +362,15 @@ def AssignInstructor():
 def InsertTeaches():
 
 	#execute query to fetch all details of the course
-	course = fetch_all(check_course, request.form['Course_ID'])
+	course = fetch_all(CHECK_COURSE, request.form['Course_ID'])
 
 	#execute query to fetch all details of the section
-	section = fetch_all(check_section, (request.form['Section_ID'], request.form['Course_ID']))
+	section = fetch_all(CHECK_SECTION, (request.form['Section_ID'], request.form['Course_ID']))
 	
 
 	if (course and section): #Check if course and section exist
 		#execute query to assign the instructor to teach
-		insert(assign_inst, (request.form['Course_ID'], request.form['Instructor_ID'], request.form['Section_ID'] ))
+		insert(ASSIGN_INST, (request.form['Course_ID'], request.form['Instructor_ID'], request.form['Section_ID'] ))
 
 	else: #if course or section dont exist
 		error = 'Invalid Section'
@@ -393,10 +393,10 @@ def InstructorInsertCourse():
 
 	try:
 		#execute query to add the course
-		insert(create_course, (request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name']))
+		insert(CREATE_COURSE, (request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name']))
 
 		#execute query to add the section
-		insert(create_section,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']) )
+		insert(CREATE_SECTION,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']) )
 
 		return redirect(url_for('InstructorCreateCourse'))
 	
@@ -419,11 +419,11 @@ def InstructorCreateSection():
 def InstructorInsertSection():
 
 	#execute query to check if course exists
-	course = fetch_all(check_course, request.form['Course_ID'])
+	course = fetch_all(CHECK_COURSE, request.form['Course_ID'])
 
 	if (course):	#if the course exists then create section
 		#execute query to add the section
-		insert(create_section,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']))
+		insert(CREATE_SECTION,(request.form['Section_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Semester'], request.form['Section_Day'], request.form['Section_Time'], request.form['Student_Limit']))
 
 	else:		# if course doesnt exist, return error message
 		error = 'Invalid Course ID'
@@ -431,6 +431,7 @@ def InstructorInsertSection():
 
 
 	return redirect(url_for('InstructorCreateSection'))
+
 
 #Route for admin page to create instructor account
 @app.route('/CreateInstructor')
@@ -445,7 +446,7 @@ def InsertInstructor():
 	
 	try:
 		#execute query to add the instructor account
-		insert(create_inst, (request.form['Instructor_ID'], request.form['Instructor_Password'], request.form['Instructor_Fname'], request.form['Instructor_Lname'], request.form['Instructor_Email'], request.form['Department_Name']))
+		insert(CREATE_INST, (request.form['Instructor_ID'], request.form['Instructor_Password'], request.form['Instructor_Fname'], request.form['Instructor_Lname'], request.form['Instructor_Email'], request.form['Department_Name']))
 
 		return redirect(url_for('CreateInstructor'))
 	
@@ -470,7 +471,7 @@ def InsertDepartment():
 
 	try:
 		#execute query to add the department
-		insert(create_dept, (request.form['Department_Name'], request.form['Department_Address'], request.form['Department_Email']))
+		insert(CREATE_DEPT, (request.form['Department_Name'], request.form['Department_Address'], request.form['Department_Email']))
 		return redirect(url_for('CreateDepartment'))
 	
 	except Exception as e:		#if creating department fails return error
@@ -495,7 +496,7 @@ def InsertAdmin():
 
 	try:
 		#execute query to add the admin account
-		insert(create_admin, ( request.form['Admin_ID'], request.form['Admin_Password']))
+		insert(CREATE_ADMIN, ( request.form['Admin_ID'], request.form['Admin_Password']))
 
 		return redirect(url_for('CreateAdmin'))
 	
@@ -511,7 +512,7 @@ def InsertAdmin():
 def ViewInstructorCourses():
 	
 	#Executes query to fetch details of all courses taught by this instructor
-	teaches = fetch_all(inst_courses, session['Instructor_ID'])
+	teaches = fetch_all(INST_COURSES, session['Instructor_ID'])
 
 	return render_template('InstructorCourses.html', teaches=teaches)
 
@@ -524,13 +525,13 @@ def CourseStudents():
 	if 'View_Students' in request.form:	#checks if instructor would like to view their courses
 		
 		# Course = request.form['View_Students']
-		Course=yaml.safe_load(request.form['View_Students'])
+		course=yaml.safe_load(request.form['View_Students'])
 		
 
 		#Executes query for getting students based on course and section ID and instructor teaching
-		students = fetch_all(students_enrolled, (Course['Course_ID'], Course['Section_ID'], session["Instructor_ID"]))
+		students = fetch_all(STUDENTS_ENROLLED, (course['Course_ID'], course['Section_ID'], session["Instructor_ID"]))
 		
-		return render_template('StudentsInCourse.html', students=students, Course_ID=Course['Course_ID'])
+		return render_template('StudentsInCourse.html', students=students, Course_ID=course['Course_ID'])
 
 	return redirect(url_for('ViewInstructorCourses'))
 
@@ -543,14 +544,14 @@ def GradeStudents():
 	if ('Confirm' in request.form):		#Check if instructor would like to update and fetches which student to assign grade to
 		
 		#Get grade value from instructor input to update database
-		Confirm = request.form['Confirm']
+		confirm = request.form['Confirm']
 		
 
-		Confirm=yaml.safe_load(Confirm)
+		confirm=yaml.safe_load(confirm)
 
 
 		#Executes query for inserting student grade
-		insert(update_grade, (request.form['Grade'],  Confirm['Student_ID'], Confirm['Section_ID'], Confirm['Course_ID']))
+		insert(UPDATE_GRADE, (request.form['Grade'],  confirm['Student_ID'], confirm['Section_ID'], confirm['Course_ID']))
 		
 	return redirect(url_for('CourseStudents'))
 
@@ -562,7 +563,7 @@ def StudentSearchName():
 	
 
 	#Query to get available section information
-	courses = fetch_all(search_cname,  request.form['Course_Name'])
+	courses = fetch_all(SEARCH_CNAME,  request.form['Course_Name'])
 	
 	return render_template('StudentSearchCourseName.html',courses=courses)
 
@@ -573,7 +574,7 @@ def StudentSearchName():
 def StudentSearchDepartment():
 	
 	#Query to get available section information
-	courses = fetch_all(search_cdept, request.form['Department_Name'])
+	courses = fetch_all(SEARCH_CDEPT, request.form['Department_Name'])
 
 	return render_template('StudentSearchDepartment.html',courses=courses)
 
@@ -585,7 +586,7 @@ def StudentSearchInstructor():
 	
 	
 	#Query to get available section information
-	courses = fetch_all(search_cinst, request.form['Instructor_Name'])
+	courses = fetch_all(SEARCH_CINST, request.form['Instructor_Name'])
 
 	return render_template('StudentSearchInstructor.html',courses=courses)
 
@@ -598,18 +599,18 @@ def Register():
 	if ('Register' in request.form):		#Checks if student chose to register
 		
 		#Fetches data of which section is chosen
-		Register = request.form['Register']
+		register = request.form['Register']
 		
-		Register=yaml.safe_load(Register)
+		register=yaml.safe_load(register)
 		
 		try:
 			#Executes query for inserting student into the section
-			insert(enroll_student, (Register['Course_ID'], session['Student_ID'], Register['Section_ID']))
+			insert(ENROLL_STUDENT, (register['Course_ID'], session['Student_ID'], register['Section_ID']))
 
 			#executes query to update student credits based on the registered course
-			course_credits = fetch_one(get_credits,  Register['Course_ID'])
+			course_credits = fetch_one(GET_CREDITS,  register['Course_ID'])
 			
-			insert(update_credits, course_credits['Course_Credits'])
+			insert(UPDATE_CREDITS, course_credits['Course_Credits'])
 
 		except Exception as e:		#if registering the student to the section fails return error
 
@@ -634,7 +635,7 @@ def InsertChoice():
 
 	try:
 		#execute query to add the choice to the database for instrcutor to choose
-		insert(create_choice, (session['Admin_ID'], request.form['Instructor_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name'], request.form['Semester'], request.form['Student_Limit'], request.form['Section_ID'], request.form['Section_Day'], request.form['Section_Time'], request.form['Section2_ID'], request.form['Section2_Day'], request.form['Section2_Time']))
+		insert(CREATE_CHOICE, (session['Admin_ID'], request.form['Instructor_ID'], request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name'], request.form['Semester'], request.form['Student_Limit'], request.form['Section_ID'], request.form['Section_Day'], request.form['Section_Time'], request.form['Section2_ID'], request.form['Section2_Day'], request.form['Section2_Time']))
 		
 		return render_template('AdminProposeChoice.html')
 
@@ -652,7 +653,7 @@ def InsertChoice():
 def ViewChoice():
 
 	#Fetches the most recent choice options for the instructor to choose
-	line = fetch_one(fetch_choice, session['Instructor_ID'])
+	line = fetch_one(FETCH_CHOICE, session['Instructor_ID'])
 
 	return render_template('InstructorChoice.html', line= line)
 
@@ -662,40 +663,40 @@ def ViewChoice():
 @app.route('/InsertSectionChoice', methods=['GET', 'POST'])
 def InsertSectionChoice():
 
-	course =  fetch_one(fetch_choice, session['Instructor_ID'])
+	course =  fetch_one(FETCH_CHOICE, session['Instructor_ID'])
 	
-	Selected_Section = request.form['Selected_Section']
+	selected_section = request.form['Selected_Section']
 
-	if (Selected_Section == 'Section1'):	#if chosen section is the first section
+	if (selected_section == 'Section1'):	#if chosen section is the first section
 		
 		#Query to create the new course
-		insert(create_course, (course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
+		insert(CREATE_COURSE, (course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
 
 		#Query to create the new section
-		insert(create_section, (course['Section_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section_Day'], course['Section_Time'], course['Student_Limit']))
+		insert(CREATE_SECTION, (course['Section_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section_Day'], course['Section_Time'], course['Student_Limit']))
 
 		#Query to assign the instructor to the new section
-		insert(assign_inst, (course['Course_ID'], session['Instructor_ID'], course['Section_ID']))
+		insert(ASSIGN_INST, (course['Course_ID'], session['Instructor_ID'], course['Section_ID']))
 
 		#Query to delete the choice options after the section is chosen and created
-		insert(delete_choice, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
+		insert(DELETE_CHOICE, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
 
 
 
-	elif (Selected_Section == 'Section2'):		#if chosen section is the second section
+	elif (selected_section == 'Section2'):		#if chosen section is the second section
 
 		#Query to create the new course
-		insert(create_course, (course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
+		insert(CREATE_COURSE, (course['Course_ID'], course['Course_Name'], course['Course_Credits'], course['Course_Description'], course['Department_Name']))
 
 		#Query to create the new section
-		insert(create_section, (course['Section2_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section2_Day'], course['Section2_Time'], course['Student_Limit']))
+		insert(CREATE_SECTION, (course['Section2_ID'], course['Course_ID'], course['Course_Name'], course['Semester'], course['Section2_Day'], course['Section2_Time'], course['Student_Limit']))
 
 		#Query to assign the instructor to the new section
-		insert(assign_inst, (course['Course_ID'], session['Instructor_ID'], course['Section2_ID']))
+		insert(ASSIGN_INST, (course['Course_ID'], session['Instructor_ID'], course['Section2_ID']))
 
 
 		#Query to delete the choice options after the section is chosen and created
-		insert(delete_choice, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
+		insert(DELETE_CHOICE, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
 
 
 
@@ -709,5 +710,6 @@ app.secret_key = 'some key that you will never guess'
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
+
 
 
