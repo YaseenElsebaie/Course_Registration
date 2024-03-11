@@ -37,7 +37,6 @@ conn = pymysql.connect(host='localhost',
                        cursorclass=pymysql.cursors.DictCursor)
 
 
-
 # Define a route to the homepage
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -50,7 +49,6 @@ def homepage():
 def login():
 
 	return render_template('Logins.html')
-
 
 
 # Define route for student login authentication
@@ -77,7 +75,6 @@ def StudentloginAuth():
 		return render_template('Logins.html', error=error)
 
 
-
 # Define route for instructor login authentication
 @app.route('/InstructorloginAuth', methods=['GET', 'POST'])
 def InstructorloginAuth():
@@ -101,7 +98,6 @@ def InstructorloginAuth():
 		return render_template('Logins.html', error=error)
 
 
-
 # Define route for admin login authentication
 @app.route('/AdminloginAuth', methods=['GET', 'POST'])
 def AdminloginAuth():
@@ -120,7 +116,6 @@ def AdminloginAuth():
 		#returns an error message to the html page
 		error = 'Invalid login or username'
 		return render_template('Logins.html', error=error)
-
 
 
 # route to student registration page
@@ -160,7 +155,6 @@ def InstructorHome():
 	return render_template('InstructorHome.html', error=error, instructor=instructor)
 
 
-
 # route to student homepage
 @app.route('/StudentHome')
 def StudentHome(): 
@@ -168,7 +162,6 @@ def StudentHome():
 	student = fetch_one(STUDENT_INFO, (session['Student_ID']))
 
 	return render_template('StudentHome.html', student=student)
-
 
 
 #logout for student 
@@ -284,8 +277,7 @@ def Rating():
 
 		#Executes query for inserting rating
 		insert(UPDATE_RATING, (request.form['Rating'], session['Student_ID'], confirm['Section_ID'], confirm['Course_ID']) )
-			
-		
+				
 	return redirect('/StudentHome')
 
 
@@ -346,7 +338,6 @@ def AdminInsertSection():
 		error = 'Invalid Course ID'
 		return render_template('AdminCreateSection.html', error=error)
 
-
 	return redirect(url_for('AdminCreateSection'))
 
 
@@ -390,7 +381,6 @@ def InstructorCreateCourse():
 @app.route('/InstructorInsertCourse', methods=['GET', 'POST'])
 def InstructorInsertCourse():
 
-
 	try:
 		#execute query to add the course
 		insert(CREATE_COURSE, (request.form['Course_ID'], request.form['Course_Name'], request.form['Course_Credits'], request.form['Course_Description'], request.form['Department_Name']))
@@ -429,7 +419,6 @@ def InstructorInsertSection():
 		error = 'Invalid Course ID'
 		return render_template('InstructorCreateSection.html', error=error)
 
-
 	return redirect(url_for('InstructorCreateSection'))
 
 
@@ -456,13 +445,11 @@ def InsertInstructor():
 		return render_template('CreateInstructor.html', error=error)
 
 
-
 #Route for admin page to create new department
 @app.route('/CreateDepartment')
 def CreateDepartment():
 	
 	return render_template('CreateDepartment.html')
-
 
 
 #create and insert department into database
@@ -481,13 +468,11 @@ def InsertDepartment():
 		return render_template('CreateDepartment.html', error=error)
 
 
-
 #Route for admin page to create new admin account
 @app.route('/CreateAdmin')
 def CreateAdmin():
 	
 	return render_template('CreateAdmin.html')
-
 
 
 #create and insert new Admin account into database
@@ -506,7 +491,6 @@ def InsertAdmin():
 		return render_template('CreateAdmin.html', error=error)
 
 
-
 #page route and function for viewing the instructor's courses 
 @app.route('/ViewInstructorCourses')
 def ViewInstructorCourses():
@@ -515,7 +499,6 @@ def ViewInstructorCourses():
 	teaches = fetch_all(INST_COURSES, session['Instructor_ID'])
 
 	return render_template('InstructorCourses.html', teaches=teaches)
-
 
 
 #page route and function for viewing the students in the instructor's chosen course
@@ -534,7 +517,6 @@ def CourseStudents():
 		return render_template('StudentsInCourse.html', students=students, Course_ID=course['Course_ID'])
 
 	return redirect(url_for('ViewInstructorCourses'))
-
 
 
 #page route and function for updating a students grade in the database
@@ -556,7 +538,6 @@ def GradeStudents():
 	return redirect(url_for('CourseStudents'))
 
 
-
 #Page route and function to fetch available sections for student registration based on course name
 @app.route('/StudentSearchCourseName', methods=['GET', 'POST'])
 def StudentSearchName():
@@ -566,7 +547,6 @@ def StudentSearchName():
 	courses = fetch_all(SEARCH_CNAME,  request.form['Course_Name'])
 	
 	return render_template('StudentSearchCourseName.html',courses=courses)
-
 
 
 #Page route and function to fetch courses for student registration based on department
@@ -579,7 +559,6 @@ def StudentSearchDepartment():
 	return render_template('StudentSearchDepartment.html',courses=courses)
 
 
-
 #Page route and function to fetch courses for student registration based on instructor
 @app.route('/StudentSearchInstructor', methods=['GET', 'POST'])
 def StudentSearchInstructor():
@@ -589,7 +568,6 @@ def StudentSearchInstructor():
 	courses = fetch_all(SEARCH_CINST, request.form['Instructor_Name'])
 
 	return render_template('StudentSearchInstructor.html',courses=courses)
-
 
 
 #page route and function for adding a student to a section
@@ -647,7 +625,6 @@ def InsertChoice():
 		return render_template('AdminProposeChoice.html', error=error)
 
 
-
 #page route for instructor viewing proposed sections
 @app.route('/ViewChoice')
 def ViewChoice():
@@ -658,11 +635,10 @@ def ViewChoice():
 	return render_template('InstructorChoice.html', line= line)
 
 
-
 #create and insert course and section based on instructor choice into database function
 @app.route('/InsertSectionChoice', methods=['GET', 'POST'])
 def InsertSectionChoice():
-
+	
 	course =  fetch_one(FETCH_CHOICE, session['Instructor_ID'])
 	
 	selected_section = request.form['Selected_Section']
@@ -682,7 +658,6 @@ def InsertSectionChoice():
 		insert(DELETE_CHOICE, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
 
 
-
 	elif (selected_section == 'Section2'):		#if chosen section is the second section
 
 		#Query to create the new course
@@ -699,7 +674,6 @@ def InsertSectionChoice():
 		insert(DELETE_CHOICE, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
 
 
-
 	return redirect('/InstructorHome')
 
 
@@ -710,6 +684,5 @@ app.secret_key = 'some key that you will never guess'
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
-
 
 
