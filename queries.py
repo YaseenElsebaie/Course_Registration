@@ -1,4 +1,3 @@
-
 STUDENT_LOGIN = "SELECT Student_ID, Student_Password FROM Student WHERE Student_ID = %s and Student_Password = %s"
 STUDENT_INFO = "Select * from Student where Student_ID=%s"
 
@@ -114,6 +113,7 @@ DELETE_CHOICE = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s 
 
 #	(Insert department) 
 CREATE_DEPT = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES (%s, %s, %s)"
+CREATE_DEPT2 = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES ('D7', 'D7', 'D7')"
 
 
 #	(Insert admin) 
