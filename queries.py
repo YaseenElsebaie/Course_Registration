@@ -113,7 +113,7 @@ DELETE_CHOICE = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s 
 
 #	(Insert department) 
 CREATE_DEPT = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES (%s, %s, %s)"
-CREATE_DEPT2 = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES ('D7', 'D7', 'D7')"
+TEST_CREATE_DEPT2 = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES ('D7', 'D7', 'D7')"
 
 
 #	(Insert admin) 
