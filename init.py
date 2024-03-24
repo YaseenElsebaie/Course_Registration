@@ -1,21 +1,6 @@
 #Created by Yaseen Elsebaie
 
-from asyncio.format_helpers import _get_function_source
-from calendar import c, month
-from cgitb import Hook
 from distutils.log import error
-from fnmatch import fnmatchcase
-from functools import total_ordering
-from math import remainder
-from re import A
-from select import select
-from sre_parse import GLOBAL_FLAGS
-from sys import get_coroutine_origin_tracking_depth
-from sysconfig import get_paths
-from this import d
-from webbrowser import get
-from zoneinfo import available_timezones
-import re
 import yaml
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
@@ -218,7 +203,6 @@ def student_register():
 @app.route('/CourseSearchName',  methods=['GET', 'POST'])
 def Course_Search_Name():
 
-
 	#Query to get all available courses with that name
 	courses = fetch_all(FETCH_COURSE_NAME, request.form['Course_Name'])
 
@@ -270,10 +254,8 @@ def Rating():
 
 	if ('Confirm' in request.form):		#Check is student chooses to update the rating
 
-		#Get Values from the form
-		confirm = request.form['Confirm']
-
-		confirm=yaml.safe_load(confirm)
+		#Get Values from the form and clean
+		confirm=yaml.safe_load(request.form['Confirm'])
 
 		#Executes query for inserting rating
 		insert(UPDATE_RATING, (request.form['Rating'], session['Student_ID'], confirm['Section_ID'], confirm['Course_ID']) )
@@ -481,7 +463,7 @@ def InsertAdmin():
 
 	try:
 		#execute query to add the admin account
-		insert(CREATE_ADMIN, ( request.form['Admin_ID'], request.form['Admin_Password']))
+		insert(CREATE_ADMIN, (request.form['Admin_ID'], request.form['Admin_Password']))
 
 		return redirect(url_for('CreateAdmin'))
 	
@@ -509,8 +491,7 @@ def CourseStudents():
 		
 		# Course = request.form['View_Students']
 		course=yaml.safe_load(request.form['View_Students'])
-		
-
+	
 		#Executes query for getting students based on course and section ID and instructor teaching
 		students = fetch_all(STUDENTS_ENROLLED, (course['Course_ID'], course['Section_ID'], session["Instructor_ID"]))
 		
@@ -525,12 +506,7 @@ def GradeStudents():
 	
 	if ('Confirm' in request.form):		#Check if instructor would like to update and fetches which student to assign grade to
 		
-		#Get grade value from instructor input to update database
-		confirm = request.form['Confirm']
-		
-
-		confirm=yaml.safe_load(confirm)
-
+		confirm=yaml.safe_load(request.form['Confirm'])
 
 		#Executes query for inserting student grade
 		insert(UPDATE_GRADE, (request.form['Grade'],  confirm['Student_ID'], confirm['Section_ID'], confirm['Course_ID']))
@@ -542,7 +518,6 @@ def GradeStudents():
 @app.route('/StudentSearchCourseName', methods=['GET', 'POST'])
 def StudentSearchName():
 	
-
 	#Query to get available section information
 	courses = fetch_all(SEARCH_CNAME,  request.form['Course_Name'])
 	
@@ -563,7 +538,6 @@ def StudentSearchDepartment():
 @app.route('/StudentSearchInstructor', methods=['GET', 'POST'])
 def StudentSearchInstructor():
 	
-	
 	#Query to get available section information
 	courses = fetch_all(SEARCH_CINST, request.form['Instructor_Name'])
 
@@ -576,10 +550,8 @@ def Register():
 
 	if ('Register' in request.form):		#Checks if student chose to register
 		
-		#Fetches data of which section is chosen
-		register = request.form['Register']
-		
-		register=yaml.safe_load(register)
+		#Fetches data of which section is chosen and cleans it
+		register=yaml.safe_load(request.form['Register'])
 		
 		try:
 			#Executes query for inserting student into the section
@@ -595,7 +567,6 @@ def Register():
 			conn.rollback()
 			error = str(e)
 			return render_template('CourseRegistrationSearch.html', error=error)
-			
 		
 	return redirect('/StudentHome')
 
@@ -669,10 +640,8 @@ def InsertSectionChoice():
 		#Query to assign the instructor to the new section
 		insert(ASSIGN_INST, (course['Course_ID'], session['Instructor_ID'], course['Section2_ID']))
 
-
 		#Query to delete the choice options after the section is chosen and created
 		insert(DELETE_CHOICE, (session['Instructor_ID'], course['Course_ID'], course['Section_ID'], course['Section2_ID']))
-
 
 	return redirect('/InstructorHome')
 
@@ -684,5 +653,4 @@ app.secret_key = 'some key that you will never guess'
 #for changes to go through, TURN OFF FOR PRODUCTION
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
-
 
