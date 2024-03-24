@@ -1,7 +1,6 @@
 import db
 
-from queries import FETCH_COURSE_NAME
-from queries import CREATE_DEPT2
+from queries import TEST_CREATE_DEPT2
 
 
 def test_fetch_all():
@@ -17,7 +16,7 @@ def test_fetch_one():
     assert db.fetch_one("SELECT * FROM test") is None
 
 def test_insert():
-     assert db.insert(CREATE_DEPT2)
+     assert db.insert(TEST_CREATE_DEPT2)
 
      
 test_fetch_all()
