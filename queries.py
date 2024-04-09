@@ -46,17 +46,17 @@ UPDATE_RATING = "UPDATE Takes SET Rating = %s WHERE (Student_ID = %s) and (Secti
 
 #	To fetch and display available sections searched by course name
 #	(Fetch Sections and info with specific name and available capacity) 
-SEARCH_CNAME = "SELECT * FROM Section Natural Join Instructor Natural Join Teaches Natural Join Course Natural Join coursesectioncapacitydiff where (Course_Name = %s) and (remaining_spots > 0)"
+SEARCH_CNAME = "SELECT * FROM Section Natural Join Instructor Natural Join Teaches Natural Join Course Natural Join coursesectioncapacitydiff natural Join instructorratingaverage where (Course_Name = %s) and (remaining_spots > 0)"
 
 
 #	To fetch and display available sections under a specific department
 #	(Fetch Sections and info in department and available capacity) 
-SEARCH_CDEPT = "SELECT * FROM Section Natural Join Course Natural Join Instructor Natural Join Teaches Natural Join coursesectioncapacitydiff where (Department_Name = %s) and (remaining_spots > 0)"
+SEARCH_CDEPT = "SELECT * FROM Section Natural Join Course Natural Join Instructor Natural Join Teaches Natural Join coursesectioncapacitydiff natural Join instructorratingaverage where (Department_Name = %s) and (remaining_spots > 0)"
 
 
 #	To fetch and display available sections under a specific instructor
 #	(Fetch Sections and info based on instructor and available capacity) 
-SEARCH_CINST = "SELECT * FROM Section Natural Join Teaches Natural Join Instructor Natural Join coursesectioncapacitydiff where (Instructor_Fname = %s) and (remaining_spots > 0)"
+SEARCH_CINST = "SELECT * FROM Section Natural Join Teaches Natural Join Instructor Natural Join coursesectioncapacitydiff natural Join instructorratingaverage where (Instructor_Fname = %s) and (remaining_spots > 0)"
 
 
 #	(Insert Student into section) 
@@ -113,7 +113,6 @@ DELETE_CHOICE = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s 
 
 #	(Insert department) 
 CREATE_DEPT = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES (%s, %s, %s)"
-TEST_CREATE_DEPT2 = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES ('D7', 'D7', 'D7')"
 
 
 #	(Insert admin) 
