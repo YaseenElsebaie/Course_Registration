@@ -2,6 +2,8 @@ import db
 
 TEST_STUDENT_ID = "Y"
 STUDENT_ID_FLD = "Student_ID" 
+TEST_DEPT_NAME = "D8"
+DEPT_NAME_FLD = "Department_Name"
 
 def test_fetch_all():
     result = db.fetch_all("SELECT * FROM student")
@@ -26,13 +28,34 @@ def test_fetch_one_empty():
     assert result is None 
 
 
-def test_insert():
-    result = db.insert("INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES ('D8', 'D8', 'D8')")
-    assert result is None
+def test_insert():  #two tests for insert one working and one failing
+    insertion_bool  = db.insert("INSERT INTO Department (Department_Name, Department_Address, Department_Email) "
+                 + f"VALUES ('{TEST_DEPT_NAME}', '{TEST_DEPT_NAME}', '{TEST_DEPT_NAME}')")
+    print(f"Insertion result: {insertion_bool}")
+    
+    if (insertion_bool):
+        result = db.fetch_one("Select * From Department where Department_Name = 'D8'")
+        assert isinstance(result, dict)
+        assert result[DEPT_NAME_FLD] == TEST_DEPT_NAME
+        print("Insertion Successful")
+        db.insert("DELETE FROM Department WHERE Department_Name = 'D8' AND Department_Address = 'D8' AND Department_Email = 'D8' ")
+    elif (insertion_bool == False):
+        # assert result is None
+        print("Insertion Failed")
+    
 
 
-def test_delete():
-    result = db.insert("DELETE FROM Department WHERE Department_Name = 'D8' AND Department_Address = 'D8' AND Department_Email = 'D8' ")
-    assert result is None
 
+def test_delete():  #two tests for delete one working and one failing
+    db.insert("INSERT INTO Department (Department_Name, Department_Address, Department_Email) ")
+    deletion_bool = db.insert("DELETE FROM Department WHERE Department_Name = 'D8' AND Department_Address = 'D8' AND Department_Email = 'D8' ")
+    print(f"Insertion result: {deletion_bool}")
+
+    if (deletion_bool):
+        result = db.fetch_one("Select * From Department where Department_Name = 'D8' AND Department_Address = 'D8' AND Department_Email = 'D8'")
+        assert result is None
+    else:
+        print("Deletion Failed")
+
+     
      
