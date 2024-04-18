@@ -21,20 +21,18 @@ conn = pymysql.connect(host='localhost',
                        cursorclass=pymysql.cursors.DictCursor)
 
 
-
+# Function to execute query and fetch all rows from database
 def fetch_all(query, parameters=None):
     cursor = conn.cursor()
     try:
         cursor.execute(query, parameters)
         result = cursor.fetchall()
-    except:
-        return None
     finally:
         cursor.close()
     return result
 
 
-
+# Function to execute query and fetch first row from database
 def fetch_one(query, parameters=None):
     cursor = conn.cursor()
     try:
@@ -45,19 +43,20 @@ def fetch_one(query, parameters=None):
     return result
 
 
-
+# Function to execute inserting query
 def insert(query, parameters=None):
     cursor = conn.cursor()
     try:
         cursor.execute(query, parameters)
         conn.commit()
+        return True
             
-    except Exception as e:		
-            
+    except Exception as e:		    
         conn.rollback()
-        error = str(e)
+        return False
         
     finally:
         cursor.close()
         
+
 
