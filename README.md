@@ -1,8 +1,13 @@
 # Course Registration System
 
-This system will have the following features:
+This program is intended to improve upon the [current NYU registration system](https://www.nyu.edu/students/student-information-and-resources/registration-records-and-graduation/registration.html)
 
-### Non Logged In Functionalities
+## Technologies:
+
+
+## Features:
+
+### Non Logged In Functions
 - Student Login
 - Admin Login
 - Instructor Login
@@ -13,7 +18,7 @@ This system will have the following features:
   - By department
   - By Instructor
 
-### Admin functionalities
+### Admin Functions
 - Create department
 - Create Instructor profile and account
 - Create other admin profile and account
@@ -22,7 +27,7 @@ This system will have the following features:
 - Assign Instructors to teach existing sections
 - Propose section choice to instructors
 
-### Instructor Functionalities
+### Instructor Functions
 - View Courses being taught
   - View Students in each course
 - Assign Grades for the students
@@ -32,7 +37,7 @@ This system will have the following features:
   - View Professor Ratings for each section
   - Choose a section to teach
 
-### Student Functionalities
+### Student Functions
 - View professor ratings for courses and sections
 - Search for course and register
   - Search using course name, select preferred section, and register
