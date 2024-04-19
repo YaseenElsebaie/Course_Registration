@@ -1,5 +1,7 @@
 # Course Registration System
 
+<img src=‘https://images.app.goo.gl/hXaFXmkQZYb9SH4x9'>
+
 This program is intended to improve upon the [current NYU registration system](https://www.nyu.edu/students/student-information-and-resources/registration-records-and-graduation/registration.html)
 
 ## Technologies:
