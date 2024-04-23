@@ -4,7 +4,8 @@ This program is intended to improve upon the [current NYU registration system](h
 
 ## Technologies:
 - BACKEND
-  - Python Flask
+  - Python
+  - Flask Framework
   - MySQL Database Server
 - FRONTEND
   - HTML
@@ -40,7 +41,6 @@ This program is intended to improve upon the [current NYU registration system](h
 - Create Course and Section simultaneously
 - Create Section for preexisting course
 - View Section Options
-  - View Professor Ratings for each section
   - Choose a section to teach
 
 ### Student Functions
