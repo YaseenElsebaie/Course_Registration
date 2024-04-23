@@ -1,10 +1,14 @@
 # Course Registration System
 
-<img src="https://images.app.goo.gl/hXaFXmkQZYb9SH4x9](https://media.istockphoto.com/id/869283118/photo/register-online.jpg?b=1&s=612x612&w=0&k=20&c=uB7oG9dgEMZkhdvfULcs-bYo8gREK1RU34auh4FZJdc=">
-
 This program is intended to improve upon the [current NYU registration system](https://www.nyu.edu/students/student-information-and-resources/registration-records-and-graduation/registration.html)
 
 ## Technologies:
+- BACKEND
+  - Python Flask
+  - MySQL Database Server
+- FRONTEND
+  - HTML
+  - CSS
 
 
 ## Features:
