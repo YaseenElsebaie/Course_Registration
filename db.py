@@ -1,13 +1,3 @@
-from asyncio.format_helpers import _get_function_source
-from cgitb import Hook
-from distutils.log import error
-from re import A
-import re
-from select import select
-from sre_parse import GLOBAL_FLAGS
-from sys import get_coroutine_origin_tracking_depth
-from sysconfig import get_paths
-import re
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
 
@@ -44,7 +34,7 @@ def fetch_one(query, parameters=None):
 
 
 # Function to execute inserting query
-def insert(query, parameters=None):
+def run_query(query, parameters=None):
     cursor = conn.cursor()
     try:
         cursor.execute(query, parameters)
@@ -58,5 +48,4 @@ def insert(query, parameters=None):
     finally:
         cursor.close()
         
-
 
