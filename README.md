@@ -5,7 +5,8 @@ This program is intended to improve upon the [current NYU registration system](h
 ## Technologies:
 - BACKEND
   - Python
-  - Flask Framework
+      - Flask Framework
+      - Pytest
   - MySQL Database Server
 - FRONTEND
   - HTML
