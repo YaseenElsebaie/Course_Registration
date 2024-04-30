@@ -1,13 +1,15 @@
+#   (Fetch Student Login and info for page display)
 STUDENT_LOGIN = "SELECT Student_ID, Student_Password FROM Student WHERE Student_ID = %s and Student_Password = %s"
 STUDENT_INFO = "Select * from Student where Student_ID=%s"
 
+
+#   (Fetch Instructor Login and info for page display)
 INST_LOGIN = "SELECT Instructor_ID, Instructor_Password FROM Instructor WHERE Instructor_ID = %s and Instructor_Password = %s"
 INST_INFO = "Select * from Instructor where Instructor_ID=%s"
 
+#   (Fetch Admin info for login check)
 ADMIN_LOGIN = "SELECT Admin_ID, Admin_Password FROM Administrator WHERE Admin_ID = %s and Admin_Password = %s"
 
-
-REGISTER_STUDENT = "INSERT INTO Student (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken) VALUES (%s, %s,%s, %s, %s, %s)"
 
 
 #	(Fetch Courses with specific name) 
@@ -46,17 +48,17 @@ UPDATE_RATING = "UPDATE Takes SET Rating = %s WHERE (Student_ID = %s) and (Secti
 
 #	To fetch and display available sections searched by course name
 #	(Fetch Sections and info with specific name and available capacity) 
-SEARCH_CNAME = "SELECT * FROM Section Natural Join Instructor Natural Join Teaches Natural Join Course Natural Join coursesectioncapacitydiff natural Join instructorratingaverage where (Course_Name = %s) and (remaining_spots > 0)"
+SEARCH_CNAME = "SELECT * FROM (SELECT * FROM Section NATURAL JOIN Instructor NATURAL JOIN Teaches NATURAL JOIN Course NATURAL JOIN coursesectioncapacitydiff WHERE (Course_Name = %s) AND (remaining_spots > 0)) AS Subquery LEFT JOIN instructorratingaverage ON Subquery.Instructor_ID = instructorratingaverage.instructor_id"
 
 
 #	To fetch and display available sections under a specific department
 #	(Fetch Sections and info in department and available capacity) 
-SEARCH_CDEPT = "SELECT * FROM Section Natural Join Course Natural Join Instructor Natural Join Teaches Natural Join coursesectioncapacitydiff natural Join instructorratingaverage where (Department_Name = %s) and (remaining_spots > 0)"
+SEARCH_CDEPT = "SELECT * FROM (SELECT * FROM Section Natural Join Course Natural Join Instructor Natural Join Teaches Natural Join coursesectioncapacitydiff where (Department_Name = %s) and (remaining_spots > 0)) AS Subquery LEFT JOIN instructorratingaverage ON Subquery.Instructor_ID = instructorratingaverage.instructor_id"
 
 
 #	To fetch and display available sections under a specific instructor
 #	(Fetch Sections and info based on instructor and available capacity) 
-SEARCH_CINST = "SELECT * FROM Section Natural Join Teaches Natural Join Instructor Natural Join coursesectioncapacitydiff natural Join instructorratingaverage where (Instructor_Fname = %s) and (remaining_spots > 0)"
+SEARCH_CINST = "SELECT * FROM (SELECT * FROM Section Natural Join Teaches Natural Join Instructor Natural Join coursesectioncapacitydiff  where (Instructor_Fname = %s) and (remaining_spots > 0)) AS Subquery LEFT JOIN instructorratingaverage ON Subquery.Instructor_ID = instructorratingaverage.instructor_id"
 
 
 #	(Insert Student into section) 
@@ -110,6 +112,8 @@ DELETE_CHOICE = "DELETE FROM Choice WHERE Instructor_ID = %s AND Course_ID = %s 
 
 
 
+#   (Register student into database)
+REGISTER_STUDENT = "INSERT INTO Student (Student_ID, Student_Password, Student_Fname, Student_Lname, Major, Credits_Taken) VALUES (%s, %s,%s, %s, %s, %s)"
 
 #	(Insert department) 
 CREATE_DEPT = "INSERT INTO Department (Department_Name, Department_Address, Department_Email) VALUES (%s, %s, %s)"
