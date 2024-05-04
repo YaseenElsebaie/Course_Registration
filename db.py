@@ -33,7 +33,7 @@ def fetch_one(query, parameters=None):
     return result
 
 
-# Function to execute insertion or deletion query
+# Function to execute inserting query
 def run_query(query, parameters=None):
     cursor = conn.cursor()
     try:
@@ -47,3 +47,5 @@ def run_query(query, parameters=None):
         
     finally:
         cursor.close()
+        
+
